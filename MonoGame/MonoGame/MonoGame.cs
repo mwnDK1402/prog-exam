@@ -32,8 +32,7 @@
             //// TODO: Add your drawing code here
             this.spriteBatch.Begin();
 
-            this.text.Draw(this.spriteBatch);
-            ////this.spriteBatch.DrawString(this.text.font, "Hello, World!", new Vector2(200f, 200f), Color.Black);
+            this.text.Draw();
 
             this.spriteBatch.End();
 
@@ -64,9 +63,12 @@
 
             this.text = new MovingText(
                 this.Content.Load<SpriteFont>("MainFont"),
-                new Vector2(100f, 100f),
+                this.graphics.GraphicsDevice,
+                this.spriteBatch,
                 new Vector2(0f, 0f),
-                "Hello, World!");
+                Vector2.One * 100f,
+                "Hello, World!",
+                Color.Red);
 
             //// TODO: use this.Content to load your game content here
         }
@@ -93,6 +95,7 @@
             }
 
             //// TODO: Add your update logic here
+            this.text.Update(gameTime);
 
             base.Update(gameTime);
         }
@@ -101,18 +104,21 @@
         {
             private Color color;
             private SpriteFont font;
-
-            private Vector2 position, velocity;
-
-            private Vector2 size;
+            private GraphicsDevice graphics;
+            private Vector2 position, size, velocity;
+            private SpriteBatch spriteBatch;
 
             public MovingText(
-                            SpriteFont font,
+                SpriteFont font,
+                GraphicsDevice graphics,
+                SpriteBatch spriteBatch,
                 Vector2 position,
                 Vector2 velocity,
                 string content)
             {
                 this.font = font;
+                this.graphics = graphics;
+                this.spriteBatch = spriteBatch;
                 this.position = position;
                 this.velocity = velocity;
                 this.Content = content;
@@ -121,11 +127,13 @@
 
             public MovingText(
                 SpriteFont font,
+                GraphicsDevice graphics,
+                SpriteBatch spriteBatch,
                 Vector2 position,
                 Vector2 velocity,
                 string content,
                 Color color)
-                : this(font, position, velocity, content)
+                : this(font, graphics, spriteBatch, position, velocity, content)
             {
                 this.Color = color;
             }
@@ -146,16 +154,44 @@
 
             public string Content { get; set; }
 
-            public void Draw(SpriteBatch drawer)
+            public void Draw()
             {
-                drawer.DrawString(this.font, this.Content, this.position, this.Color);
+                this.spriteBatch.DrawString(this.font, this.Content, this.position, this.Color);
             }
 
-            public void Update()
+            public void Update(GameTime gameTime)
             {
-                
+                var screenSize = new Vector2(
+                    this.graphics.Viewport.Width,
+                    this.graphics.Viewport.Height);
 
-                this.position += this.velocity;
+                var space = screenSize - (this.position + this.size);
+
+                var appliedVel = this.velocity * (float)gameTime.ElapsedGameTime.TotalSeconds;
+
+                if (this.position.X < 0f)
+                {
+                    appliedVel.X = -this.position.X;
+                    this.velocity.X = -this.velocity.X;
+                }
+                else if (space.X < 0)
+                {
+                    appliedVel.X = space.X;
+                    this.velocity.X = -this.velocity.X;
+                }
+
+                if (this.position.Y < 0f)
+                {
+                    appliedVel.Y = -this.position.Y;
+                    this.velocity.Y = -this.velocity.Y;
+                }
+                else if (space.Y < 0)
+                {
+                    appliedVel.Y = space.Y;
+                    this.velocity.Y = -this.velocity.Y;
+                }
+
+                this.position += appliedVel;
             }
 
             private void UpdateSize()
