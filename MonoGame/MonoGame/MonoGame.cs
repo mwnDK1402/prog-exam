@@ -7,13 +7,11 @@
     /// <summary>
     /// This is the main type for your game.
     /// </summary>
-    public class MonoGame : Game
+    internal sealed class MonoGame : Game
     {
         private GraphicsDeviceManager graphics;
-
+        private Player player;
         private SpriteBatch spriteBatch;
-
-        private MovingText text;
 
         public MonoGame()
         {
@@ -31,8 +29,8 @@
 
             //// TODO: Add your drawing code here
             this.spriteBatch.Begin();
-
-            this.text.Draw();
+            
+            this.player.Draw();
 
             this.spriteBatch.End();
 
@@ -61,16 +59,8 @@
             // Create a new SpriteBatch, which can be used to draw textures.
             this.spriteBatch = new SpriteBatch(this.GraphicsDevice);
 
-            this.text = new MovingText(
-                this.Content.Load<SpriteFont>("MainFont"),
-                this.graphics.GraphicsDevice,
-                this.spriteBatch,
-                new Vector2(0f, 0f),
-                Vector2.One * 100f,
-                "Hello, World!",
-                Color.Red);
-
             //// TODO: use this.Content to load your game content here
+            this.player = new Player(this.Content, this.spriteBatch, new Vector2(200f, 200f));
         }
 
         /// <summary>
@@ -95,109 +85,9 @@
             }
 
             //// TODO: Add your update logic here
-            this.text.Update(gameTime);
+            this.player.Update(gameTime);
 
             base.Update(gameTime);
-        }
-
-        private class MovingText
-        {
-            private Color color;
-            private SpriteFont font;
-            private GraphicsDevice graphics;
-            private Vector2 position, size, velocity;
-            private SpriteBatch spriteBatch;
-
-            public MovingText(
-                SpriteFont font,
-                GraphicsDevice graphics,
-                SpriteBatch spriteBatch,
-                Vector2 position,
-                Vector2 velocity,
-                string content)
-            {
-                this.font = font;
-                this.graphics = graphics;
-                this.spriteBatch = spriteBatch;
-                this.position = position;
-                this.velocity = velocity;
-                this.Content = content;
-                this.Color = Color.Black;
-            }
-
-            public MovingText(
-                SpriteFont font,
-                GraphicsDevice graphics,
-                SpriteBatch spriteBatch,
-                Vector2 position,
-                Vector2 velocity,
-                string content,
-                Color color)
-                : this(font, graphics, spriteBatch, position, velocity, content)
-            {
-                this.Color = color;
-            }
-
-            public Color Color
-            {
-                get
-                {
-                    return this.color;
-                }
-
-                set
-                {
-                    this.color = value;
-                    this.UpdateSize();
-                }
-            }
-
-            public string Content { get; set; }
-
-            public void Draw()
-            {
-                this.spriteBatch.DrawString(this.font, this.Content, this.position, this.Color);
-            }
-
-            public void Update(GameTime gameTime)
-            {
-                var screenSize = new Vector2(
-                    this.graphics.Viewport.Width,
-                    this.graphics.Viewport.Height);
-
-                var space = screenSize - (this.position + this.size);
-
-                var appliedVel = this.velocity * (float)gameTime.ElapsedGameTime.TotalSeconds;
-
-                if (this.position.X < 0f)
-                {
-                    appliedVel.X = -this.position.X;
-                    this.velocity.X = -this.velocity.X;
-                }
-                else if (space.X < 0)
-                {
-                    appliedVel.X = space.X;
-                    this.velocity.X = -this.velocity.X;
-                }
-
-                if (this.position.Y < 0f)
-                {
-                    appliedVel.Y = -this.position.Y;
-                    this.velocity.Y = -this.velocity.Y;
-                }
-                else if (space.Y < 0)
-                {
-                    appliedVel.Y = space.Y;
-                    this.velocity.Y = -this.velocity.Y;
-                }
-
-                this.position += appliedVel;
-            }
-
-            private void UpdateSize()
-            {
-                this.size = this.font.MeasureString(this.Content);
-            }
         }
     }
 }
