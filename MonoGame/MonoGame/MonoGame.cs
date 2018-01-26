@@ -1,5 +1,6 @@
 ﻿namespace MonoGame
 {
+    using global::MonoGame.Utility;
     using Microsoft.Xna.Framework;
     using Microsoft.Xna.Framework.Graphics;
     using Microsoft.Xna.Framework.Input;
@@ -10,7 +11,9 @@
     internal sealed class MonoGame : Game
     {
         private GraphicsDeviceManager graphics;
-        private Player player;
+        private InputManager inputManager;
+        private SceneManager sceneManager;
+        private ScreenManager screenManager;
         private SpriteBatch spriteBatch;
 
         public MonoGame()
@@ -27,10 +30,9 @@
         {
             this.GraphicsDevice.Clear(Color.CornflowerBlue);
 
-            //// TODO: Add your drawing code here
             this.spriteBatch.Begin();
-            
-            this.player.Draw();
+
+            this.sceneManager.Draw(gameTime);
 
             this.spriteBatch.End();
 
@@ -46,6 +48,9 @@
         protected override void Initialize()
         {
             //// TODO: Add your initialization logic here
+            this.inputManager = new InputManager();
+            this.screenManager = new ScreenManager(this.GraphicsDevice);
+            this.IsMouseVisible = true;
 
             base.Initialize();
         }
@@ -58,9 +63,11 @@
         {
             // Create a new SpriteBatch, which can be used to draw textures.
             this.spriteBatch = new SpriteBatch(this.GraphicsDevice);
-
-            //// TODO: use this.Content to load your game content here
-            this.player = new Player(this.Content, this.spriteBatch, new Vector2(200f, 200f));
+            this.sceneManager = new SceneManager(this.Content, this.spriteBatch, this.inputManager, this.screenManager)
+            {
+                // Dependent on Content, spriteBatch, inputManager, and screenManager being initialized
+                ActiveScene = new MainMenuScene()
+            };
         }
 
         /// <summary>
@@ -79,13 +86,15 @@
         /// <param name="gameTime">Provides a snapshot of timing values.</param>
         protected override void Update(GameTime gameTime)
         {
+            // Global input
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
             {
                 this.Exit();
             }
 
             //// TODO: Add your update logic here
-            this.player.Update(gameTime);
+            this.sceneManager.Update(gameTime);
+            this.inputManager.Update(gameTime);
 
             base.Update(gameTime);
         }

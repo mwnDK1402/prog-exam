@@ -29,7 +29,7 @@
             this.nameFont = content.Load<SpriteFont>("NameFont");
         }
 
-        public void Draw()
+        public void Draw(GameTime gamemTime)
         {
             this.UpdateRect();
             this.spriteBatch.Draw(this.texture, this.rect, Color.White);

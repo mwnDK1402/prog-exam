@@ -41,10 +41,19 @@
     <ApplicationManifest>app.manifest</ApplicationManifest>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="Entities\Button.cs" />
+    <Compile Include="SceneManager.cs" />
+    <Compile Include="Scenes\GameScene.cs" />
+    <Compile Include="Entities\Entity.cs" />
+    <Compile Include="Scenes\MainMenuScene.cs" />
+    <Compile Include="Scenes\Scene.cs" />
+    <Compile Include="Entities\Laser.cs" />
     <Compile Include="MonoGame.cs" />
-    <Compile Include="Player.cs" />
+    <Compile Include="Entities\Player.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Utility\InputManager.cs" />
+    <Compile Include="Utility\ScreenManager.cs" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="MonoGame.Framework">
