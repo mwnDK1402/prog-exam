@@ -7,7 +7,7 @@
     {
         private Button playButton;
 
-        public MainMenuScene()
+        public MainMenuScene(MonoGame game) : base(game)
         {
         }
 
@@ -22,16 +22,16 @@
             this.playButton = new Button(
                 new Rectangle(
                     new Point(
-                        (this.ScreenManager.ScreenWidth - buttonSize.X) / 2,
-                        (this.ScreenManager.ScreenHeight - buttonSize.Y) / 2),
+                        (this.Game.ScreenManager.ScreenWidth - buttonSize.X) / 2,
+                        (this.Game.ScreenManager.ScreenHeight - buttonSize.Y) / 2),
                     buttonSize),
                 4,
                 this.OnPlayPressed,
-                this.Content.Load<Texture2D>("PlayButtonPressed"),
-                this.Content.Load<Texture2D>("PlayButtonReleased"),
-                this.InputManager);
+                this.Game.Content.Load<Texture2D>("PlayButtonPressed"),
+                this.Game.Content.Load<Texture2D>("PlayButtonReleased"),
+                this.Game.InputManager);
 
-            this.playButton.Initialize(this.SpriteBatch);
+            this.playButton.Initialize(this.Game.SpriteBatch);
         }
 
         public override void Unload()
@@ -45,7 +45,7 @@
 
         private void OnPlayPressed()
         {
-            this.SceneManager.ActiveScene = new GameScene();
+            this.Game.SceneManager.ActiveScene = new GameScene(this.Game);
         }
     }
 }

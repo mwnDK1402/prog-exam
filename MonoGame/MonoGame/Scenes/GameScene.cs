@@ -6,7 +6,7 @@
     {
         private Player player;
 
-        public GameScene()
+        public GameScene(MonoGame game) : base(game)
         {
         }
 
@@ -17,7 +17,7 @@
 
         public override void Load()
         {
-            this.player = new Player(this.Content, this.SpriteBatch, new Vector2(200f, 200f));
+            this.player = new Player(this.Game.Content, this.Game.SpriteBatch, new Vector2(200f, 200f));
         }
 
         public override void Unload()

@@ -11,16 +11,20 @@
     internal sealed class MonoGame : Game
     {
         private GraphicsDeviceManager graphics;
-        private InputManager inputManager;
-        private SceneManager sceneManager;
-        private ScreenManager screenManager;
-        private SpriteBatch spriteBatch;
 
         public MonoGame()
         {
             this.graphics = new GraphicsDeviceManager(this);
             this.Content.RootDirectory = "Content";
         }
+
+        public InputManager InputManager { get; private set; }
+
+        public SceneManager SceneManager { get; private set; }
+
+        public ScreenManager ScreenManager { get; private set; }
+
+        public SpriteBatch SpriteBatch { get; private set; }
 
         /// <summary>
         /// This is called when the game should draw itself.
@@ -30,11 +34,11 @@
         {
             this.GraphicsDevice.Clear(Color.CornflowerBlue);
 
-            this.spriteBatch.Begin();
+            this.SpriteBatch.Begin();
 
-            this.sceneManager.Draw(gameTime);
+            this.SceneManager.Draw(gameTime);
 
-            this.spriteBatch.End();
+            this.SpriteBatch.End();
 
             base.Draw(gameTime);
         }
@@ -48,8 +52,8 @@
         protected override void Initialize()
         {
             //// TODO: Add your initialization logic here
-            this.inputManager = new InputManager();
-            this.screenManager = new ScreenManager(this.GraphicsDevice);
+            this.InputManager = new InputManager();
+            this.ScreenManager = new ScreenManager(this.GraphicsDevice);
             this.IsMouseVisible = true;
 
             base.Initialize();
@@ -62,11 +66,11 @@
         protected override void LoadContent()
         {
             // Create a new SpriteBatch, which can be used to draw textures.
-            this.spriteBatch = new SpriteBatch(this.GraphicsDevice);
-            this.sceneManager = new SceneManager(this.Content, this.spriteBatch, this.inputManager, this.screenManager)
+            this.SpriteBatch = new SpriteBatch(this.GraphicsDevice);
+            this.SceneManager = new SceneManager()
             {
                 // Dependent on Content, spriteBatch, inputManager, and screenManager being initialized
-                ActiveScene = new MainMenuScene()
+                ActiveScene = new MainMenuScene(this)
             };
         }
 
@@ -93,8 +97,8 @@
             }
 
             //// TODO: Add your update logic here
-            this.sceneManager.Update(gameTime);
-            this.inputManager.Update(gameTime);
+            this.SceneManager.Update(gameTime);
+            this.InputManager.Update(gameTime);
 
             base.Update(gameTime);
         }
