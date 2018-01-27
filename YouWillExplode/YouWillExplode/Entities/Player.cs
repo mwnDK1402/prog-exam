@@ -5,7 +5,7 @@
     using Microsoft.Xna.Framework.Graphics;
     using Microsoft.Xna.Framework.Input;
 
-    internal class Player
+    internal sealed class Player
     {
         private const float NameElevation = 5f, Speed = 100f;
         private static readonly string CharacterName = "Player";
