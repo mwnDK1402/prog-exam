@@ -18,10 +18,5 @@
         public abstract void Unload();
 
         public abstract void Update(GameTime gameTime);
-
-        internal void Initialize(YouWillExplode game)
-        {
-            this.Game = game;
-        }
     }
 }

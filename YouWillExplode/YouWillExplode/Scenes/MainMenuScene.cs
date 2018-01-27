@@ -85,8 +85,7 @@
 
         private void OnSettingsPressed()
         {
-            this.buttonLayout.Items.Remove(this.settingsButton);
-            ////throw new NotImplementedException();
+            this.Game.SceneManager.ActiveScene = new SettingsMenuScene(this.Game);
         }
     }
 }
