@@ -1,5 +1,6 @@
 ﻿namespace MonoGame.Layout
 {
+    using System;
     using Collections;
     using Microsoft.Xna.Framework;
     using Microsoft.Xna.Framework.Graphics;
@@ -74,46 +75,26 @@
             this.RecalculateBounds();
         }
 
-        private void OnItemsChanged()
+        private Point GetFixedPosition()
         {
-            this.RecalculateBounds();
-        }
-
-        private void OnViewportChanged(Viewport viewport)
-        {
-        }
-
-        /// <summary>
-        /// Make sure the bounds match the width of the greatest element
-        /// and the aggregate height of every element, and the space between them,
-        /// without changing the fixed position of the layout.
-        /// </summary>
-        private void RecalculateBounds()
-        {
-            var newBounds = this.bounds;
-            Point fixedPosition = Point.Zero;
-
             switch (this.Alignment)
             {
                 case LayoutAlignment.Left:
-                    fixedPosition = this.bounds.GetLeftPosition();
-                    break;
+                    return this.bounds.GetLeftPosition();
 
                 case LayoutAlignment.Middle:
-                    fixedPosition = this.bounds.Center;
-                    break;
+                    return this.bounds.Center;
 
                 case LayoutAlignment.Right:
-                    fixedPosition = this.bounds.GetRightPosition();
-                    break;
-            }
+                    return this.bounds.GetRightPosition();
 
-            if (this.Items.Count == 0)
-            {
-                newBounds.Size = Point.Zero;
-                return;
+                default:
+                    throw new NotImplementedException();
             }
+        }
 
+        private Point GetRecalculatedSize()
+        {
             int greatestWidth = 0;
             int aggregateheight = 0;
             for (int i = 0; i < this.Items.Count; ++i)
@@ -131,8 +112,40 @@
             // There will be redundant spacing after the last item
             aggregateheight -= this.Spacing;
 
-            newBounds.Size = new Point(greatestWidth, aggregateheight);
+            return new Point(greatestWidth, aggregateheight);
+        }
 
+        private void OnItemsChanged()
+        {
+            this.RecalculateBounds();
+        }
+
+        private void OnViewportChanged(Viewport viewport)
+        {
+        }
+
+        /// <summary>
+        /// Make sure the bounds match the width of the greatest element
+        /// and the aggregate height of every element, and the space between them,
+        /// without changing the fixed position of the layout.
+        /// </summary>
+        private void RecalculateBounds()
+        {
+            if (this.Items.Count == 0)
+            {
+                this.bounds.Size = Point.Zero;
+                return;
+            }
+
+            Point fixedPosition = this.GetFixedPosition();
+            this.bounds.Size = this.GetRecalculatedSize();
+            this.SetFixedPosition(ref this.bounds, fixedPosition);
+
+            this.UpdateItemPositions();
+        }
+
+        private void SetFixedPosition(ref Rectangle newBounds, Point fixedPosition)
+        {
             switch (this.Alignment)
             {
                 case LayoutAlignment.Left:
@@ -147,10 +160,6 @@
                     RectangleUtility.SetRightPosition(ref newBounds, fixedPosition);
                     break;
             }
-
-            this.bounds = newBounds;
-
-            this.UpdateItemPositions();
         }
 
         private void UpdateItemPositions()
