@@ -1,12 +1,13 @@
-﻿using System;
-using System.Collections;
-using System.Collections.Generic;
-
-namespace MonoGame.Collections
+﻿namespace MonoGame.Collections
 {
+    using System;
+    using System.Collections;
+    using System.Collections.Generic;
+
     /// <summary>
     /// <see cref="List{T}"/> which exposes a <see cref="Changed"/> event.
     /// </summary>
+    /// <typeparam name="T">Type contained in the list.</typeparam>
     internal sealed class MonitoredList<T> : IList<T>, ICollection<T>, IList, ICollection, IReadOnlyList<T>, IReadOnlyCollection<T>, IEnumerable<T>, IEnumerable
     {
         private List<T> list = new List<T>();

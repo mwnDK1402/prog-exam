@@ -18,16 +18,22 @@
             var currentMouseState = Mouse.GetState();
 
             this.TryRaiseMouseStateEvent(
-                this.previousMouseState.LeftButton, currentMouseState.LeftButton,
-                ref this.LeftMousePressed, ref this.LeftMouseReleased);
+                this.previousMouseState.LeftButton,
+                currentMouseState.LeftButton,
+                ref this.LeftMousePressed,
+                ref this.LeftMouseReleased);
 
             this.TryRaiseMouseStateEvent(
-                this.previousMouseState.MiddleButton, currentMouseState.MiddleButton,
-                ref this.MiddleMousePressed, ref this.MiddleMouseReleased);
+                this.previousMouseState.MiddleButton,
+                currentMouseState.MiddleButton,
+                ref this.MiddleMousePressed,
+                ref this.MiddleMouseReleased);
 
             this.TryRaiseMouseStateEvent(
-                this.previousMouseState.RightButton, currentMouseState.RightButton,
-                ref this.RightMousePressed, ref this.RightMouseReleased);
+                this.previousMouseState.RightButton,
+                currentMouseState.RightButton,
+                ref this.RightMousePressed,
+                ref this.RightMouseReleased);
 
             this.previousKeyboardState = Keyboard.GetState();
             this.previousMouseState = currentMouseState;

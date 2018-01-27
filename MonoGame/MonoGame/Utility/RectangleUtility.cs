@@ -1,7 +1,10 @@
-﻿using Microsoft.Xna.Framework;
-
-namespace MonoGame.Utility
+﻿namespace MonoGame.Utility
 {
+    using Microsoft.Xna.Framework;
+
+    /// <summary>
+    /// Extension methods for <see cref="Rectangle"/> class.
+    /// </summary>
     internal static class RectangleUtility
     {
         public static Point GetLeftPosition(this Rectangle rect)

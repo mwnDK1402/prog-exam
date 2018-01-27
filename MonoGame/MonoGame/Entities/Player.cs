@@ -38,7 +38,7 @@
             var textPosition = this.rect.Center.ToVector2()
                 + new Vector2(
                     -fontSize.X * 0.5f,
-                    -this.rect.Height * 0.5f - fontSize.Y - NameElevation);
+                    (-this.rect.Height * 0.5f) - fontSize.Y - NameElevation);
             this.spriteBatch.DrawString(this.nameFont, CharacterName, textPosition, NameColor);
         }
 

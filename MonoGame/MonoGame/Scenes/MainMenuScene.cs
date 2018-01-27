@@ -1,7 +1,7 @@
 ﻿namespace MonoGame
 {
     using System;
-    using global::MonoGame.Layout;
+    using Layout;
     using Microsoft.Xna.Framework;
     using Microsoft.Xna.Framework.Graphics;
 

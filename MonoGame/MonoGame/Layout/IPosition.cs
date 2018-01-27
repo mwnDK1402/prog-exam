@@ -1,7 +1,7 @@
-﻿using Microsoft.Xna.Framework;
-
-namespace MonoGame
+﻿namespace MonoGame
 {
+    using Microsoft.Xna.Framework;
+
     internal interface ILayoutElement
     {
         Rectangle Bounds { get; }

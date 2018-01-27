@@ -6,8 +6,11 @@
     using Microsoft.Xna.Framework.Graphics;
     using Utility;
 
-    // TODO: Add screen alignment
-    internal sealed partial class VerticalLayout : ILayoutElement
+    /// <summary>
+    /// Controls and makes it easy to align the position of <see cref="ILayoutElement"/>s.
+    /// </summary>
+    /// <remarks>Add screen alignment.</remarks>
+    internal sealed class VerticalLayout : ILayoutElement
     {
         public readonly MonitoredList<ILayoutElement> Items = new MonitoredList<ILayoutElement>();
 

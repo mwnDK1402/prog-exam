@@ -1,9 +1,9 @@
 ﻿namespace MonoGame
 {
-    using global::MonoGame.Utility;
     using Microsoft.Xna.Framework;
     using Microsoft.Xna.Framework.Graphics;
     using Microsoft.Xna.Framework.Input;
+    using Utility;
 
     /// <summary>
     /// This is the main type for your game.
