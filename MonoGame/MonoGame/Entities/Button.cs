@@ -6,9 +6,10 @@
     using Microsoft.Xna.Framework.Input;
     using Utility;
 
-    internal sealed class Button : Entity, IPosition
+    internal sealed class Button : Entity, ILayoutElement
     {
         private Rectangle drawRect, inputRect;
+        private int margin = 0;
         private Action pressedAction;
         private Texture2D pressedTexture, releasedTexture;
         private ButtonState state;
@@ -28,23 +29,42 @@
         public Button(Rectangle rect, int margin, Action pressedAction, Texture2D pressedTexture, Texture2D releasedTexture, InputManager inputManager)
             : this(rect, pressedAction, pressedTexture, releasedTexture, inputManager)
         {
-            this.inputRect = new Rectangle(
-                this.drawRect.Location + new Point(margin, margin),
-                this.drawRect.Size - new Point(margin * 2, margin * 2));
+            this.margin = margin;
+            this.RecalculateInputRect();
         }
 
-        Vector2 IPosition.Position
+        Rectangle ILayoutElement.Bounds => this.drawRect;
+
+        Point ILayoutElement.LeftPosition
         {
-            get
-            {
-                return this.drawRect.Location.ToVector2();
-            }
+            get => this.drawRect.GetLeftPosition();
 
             set
             {
-                var newRect = this.drawRect;
-                newRect.Location = value.ToPoint();
-                this.drawRect = newRect;
+                RectangleUtility.SetLeftPosition(ref this.drawRect, value);
+                this.RecalculateInputRect();
+            }
+        }
+
+        Point ILayoutElement.MiddlePosition
+        {
+            get => this.drawRect.Center;
+
+            set
+            {
+                RectangleUtility.SetMiddlePosition(ref this.drawRect, value);
+                this.RecalculateInputRect();
+            }
+        }
+
+        Point ILayoutElement.RightPosition
+        {
+            get => this.drawRect.GetRightPosition();
+
+            set
+            {
+                RectangleUtility.SetRightPosition(ref this.drawRect, value);
+                this.RecalculateInputRect();
             }
         }
 
@@ -93,6 +113,13 @@
             }
 
             this.state = ButtonState.Released;
+        }
+
+        private void RecalculateInputRect()
+        {
+            this.inputRect = new Rectangle(
+                this.drawRect.Location + new Point(this.margin, this.margin),
+                this.drawRect.Size - new Point(this.margin * 2, this.margin * 2));
         }
     }
 }

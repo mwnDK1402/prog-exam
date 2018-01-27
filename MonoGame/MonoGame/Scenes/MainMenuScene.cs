@@ -1,11 +1,14 @@
 ﻿namespace MonoGame
 {
+    using System;
+    using global::MonoGame.Layout;
     using Microsoft.Xna.Framework;
     using Microsoft.Xna.Framework.Graphics;
 
     internal sealed class MainMenuScene : Scene
     {
-        private Button playButton;
+        private VerticalLayout buttonLayout;
+        private Button playButton, settingsButton;
 
         public MainMenuScene(MonoGame game) : base(game)
         {
@@ -14,6 +17,7 @@
         public override void Draw(GameTime gameTime)
         {
             this.playButton.Draw(gameTime);
+            this.settingsButton.Draw(gameTime);
         }
 
         public override void Load()
@@ -21,9 +25,7 @@
             var buttonSize = new Point(128, 32);
             this.playButton = new Button(
                 new Rectangle(
-                    new Point(
-                        (this.Game.ScreenManager.ScreenWidth - buttonSize.X) / 2,
-                        (this.Game.ScreenManager.ScreenHeight - buttonSize.Y) / 2),
+                    new Point(0, 0),
                     buttonSize),
                 4,
                 this.OnPlayPressed,
@@ -32,6 +34,30 @@
                 this.Game.InputManager);
 
             this.playButton.Initialize(this.Game.SpriteBatch);
+
+            this.settingsButton = new Button(
+                new Rectangle(
+                    new Point(0, 0),
+                    buttonSize),
+                4,
+                this.OnSettingsPressed,
+                this.Game.Content.Load<Texture2D>("SettingsButtonPressed"),
+                this.Game.Content.Load<Texture2D>("SettingsButtonReleased"),
+                this.Game.InputManager);
+
+            this.settingsButton.Initialize(this.Game.SpriteBatch);
+
+            this.buttonLayout = new VerticalLayout(this.Game.ScreenManager)
+            {
+                Alignment = LayoutAlignment.Middle,
+                MiddlePosition = this.Game.ScreenManager.Viewport.Bounds.Center,
+                Spacing = 20
+            };
+
+            this.buttonLayout.Items.Add(this.playButton);
+            this.buttonLayout.Items.Add(this.settingsButton);
+
+            this.buttonLayout.Initialize();
         }
 
         public override void Unload()
@@ -41,11 +67,20 @@
         public override void Update(GameTime gameTime)
         {
             this.playButton.Update(gameTime);
+            this.settingsButton.Update(gameTime);
+            this.buttonLayout.MiddlePosition = this.Game.ScreenManager.Viewport.Bounds.Center + new Point(
+                (int)(Math.Cos(gameTime.TotalGameTime.TotalSeconds) * 10),
+                (int)(Math.Sin(gameTime.TotalGameTime.TotalSeconds) * 10));
         }
 
         private void OnPlayPressed()
         {
             this.Game.SceneManager.ActiveScene = new GameScene(this.Game);
+        }
+
+        private void OnSettingsPressed()
+        {
+            ////throw new NotImplementedException();
         }
     }
 }
