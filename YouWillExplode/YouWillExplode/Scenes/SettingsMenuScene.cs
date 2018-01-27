@@ -20,9 +20,15 @@
         {
             this.backButton = new Button(
                 new Rectangle(8, this.Game.ScreenManager.ScreenHeight - 40, 92, 32),
+                "Back",
                 this.OnBackPressed,
-                this.Game.Content.Load<Texture2D>("BackButtonPressed"),
-                this.Game.Content.Load<Texture2D>("BackButtonReleased"),
+                new Button.Resources()
+                {
+                    PressedTexture = this.Game.Content.Load<Texture2D>("ButtonPressed"),
+                    ReleasedTexture = this.Game.Content.Load<Texture2D>("ButtonReleased"),
+                    Font = this.Game.Content.Load<SpriteFont>("ButtonFont")
+                },
+
                 this.Game.InputManager);
 
             this.backButton.Initialize(this.Game.SpriteBatch);

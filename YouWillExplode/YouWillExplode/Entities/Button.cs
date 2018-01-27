@@ -8,29 +8,53 @@
 
     internal sealed class Button : Entity, ILayoutElement
     {
+        private static readonly Color TextColor = Color.White;
+        private static readonly Vector2 TextPadding = new Vector2(10, 2);
         private Rectangle drawRect, inputRect;
-        private int margin = 0;
+        private int margin;
         private Action pressedAction;
-        private Texture2D pressedTexture, releasedTexture;
+        private Resources resources;
         private ButtonState state;
+        private string text;
+        private Vector2 textSize;
 
-        public Button(Rectangle rect, Action pressedAction, Texture2D pressedTexture, Texture2D releasedTexture, InputManager inputManager)
+        public Button(Rectangle rect, string text, Action pressedAction, Resources resources, InputManager inputManager)
+            : this(text, pressedAction, resources, inputManager)
+        {
+            this.drawRect = this.inputRect = rect;
+            this.TryResize(text);
+        }
+
+        /// <summary>
+        /// It may be gross to use a <see cref="Vector2"/> here, but I don't see any other way as of now.
+        /// I'd rather not expose the <see cref="Rectangle"/> of the <see cref="Button"/>.
+        /// </summary>
+        public Button(Vector2 size, string text, Action pressedAction, Resources resources, InputManager inputManager)
+            : this(text, pressedAction, resources, inputManager)
+        {
+            this.drawRect.Size = this.inputRect.Size = size.ToPoint();
+            this.TryResize(text);
+        }
+
+        public Button(Point position, string text, Action pressedAction, Resources resources, InputManager inputManager)
+            : this(text, pressedAction, resources, inputManager)
+        {
+            this.drawRect.Location = this.inputRect.Location = position;
+            this.TryResize(text);
+        }
+
+        private Button(string text, Action pressedAction, Resources resources, InputManager inputManager)
         {
             this.pressedAction = pressedAction;
-            this.drawRect = this.inputRect = rect;
-            this.state = ButtonState.Released;
-            this.pressedTexture = pressedTexture;
-            this.releasedTexture = releasedTexture;
+            this.resources = resources;
+
+            this.text = text;
+            this.textSize = resources.Font.MeasureString(text);
 
             inputManager.LeftMousePressed += this.OnLeftMousePressed;
             inputManager.LeftMouseReleased += this.OnLeftMouseReleased;
-        }
 
-        public Button(Rectangle rect, int margin, Action pressedAction, Texture2D pressedTexture, Texture2D releasedTexture, InputManager inputManager)
-            : this(rect, pressedAction, pressedTexture, releasedTexture, inputManager)
-        {
-            this.margin = margin;
-            this.RecalculateInputRect();
+            this.state = ButtonState.Released;
         }
 
         Rectangle ILayoutElement.Bounds => this.drawRect;
@@ -42,6 +66,17 @@
             set
             {
                 RectangleUtility.SetLeftPosition(ref this.drawRect, value);
+                this.RecalculateInputRect();
+            }
+        }
+
+        public int Margin
+        {
+            get => this.margin;
+
+            set
+            {
+                this.margin = value;
                 this.RecalculateInputRect();
             }
         }
@@ -68,18 +103,41 @@
             }
         }
 
+        // May be completely useless
+        private Rectangle DrawRect
+        {
+            get => this.drawRect;
+
+            set
+            {
+                this.drawRect = value;
+                this.RecalculateInputRect();
+            }
+        }
+
+        private Vector2 TextBounds
+        {
+            get => this.textSize + (2 * TextPadding);
+        }
+
         public override void Draw(GameTime gameTime)
         {
             switch (this.state)
             {
                 case ButtonState.Released:
-                    this.SpriteBatch.Draw(this.releasedTexture, this.drawRect, Color.White);
+                    this.SpriteBatch.Draw(this.resources.ReleasedTexture, this.drawRect, Color.White);
                     break;
 
                 case ButtonState.Pressed:
-                    this.SpriteBatch.Draw(this.pressedTexture, this.drawRect, Color.White);
+                    this.SpriteBatch.Draw(this.resources.PressedTexture, this.drawRect, Color.White);
                     break;
             }
+
+            this.SpriteBatch.DrawString(
+                this.resources.Font,
+                this.text,
+                this.drawRect.Center.ToVector2() - (new Vector2(this.textSize.X, this.textSize.Y) * 0.5f),
+                TextColor);
         }
 
         public override void Update(GameTime gameTime)
@@ -118,8 +176,35 @@
         private void RecalculateInputRect()
         {
             this.inputRect = new Rectangle(
-                this.drawRect.Location + new Point(this.margin, this.margin),
-                this.drawRect.Size - new Point(this.margin * 2, this.margin * 2));
+                this.drawRect.Location + new Point(this.Margin, this.Margin),
+                this.drawRect.Size - new Point(this.Margin * 2, this.Margin * 2));
+        }
+
+        private void TryResize(string text)
+        {
+            var fixedPosition = ((ILayoutElement)this).MiddlePosition;
+
+            var textSize = this.TextBounds;
+            var difference = this.drawRect.Size.ToVector2() - textSize;
+            if (difference.X < 0)
+            {
+                this.drawRect.Width = (int)Math.Ceiling(textSize.X);
+            }
+
+            if (difference.Y < 0)
+            {
+                this.drawRect.Height = (int)Math.Ceiling(textSize.Y);
+            }
+
+            ((ILayoutElement)this).MiddlePosition = fixedPosition;
+
+            this.RecalculateInputRect();
+        }
+
+        public struct Resources
+        {
+            public SpriteFont Font;
+            public Texture2D PressedTexture, ReleasedTexture;
         }
     }
 }

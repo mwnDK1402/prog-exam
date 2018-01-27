@@ -8,7 +8,7 @@
     internal sealed class MainMenuScene : Scene
     {
         private VerticalLayout buttonLayout;
-        private Button playButton, settingsButton;
+        private Button playButton, settingsButton, quitButton;
 
         public MainMenuScene(YouWillExplode game) : base(game)
         {
@@ -18,34 +18,54 @@
         {
             this.playButton.Draw(gameTime);
             this.settingsButton.Draw(gameTime);
+            this.quitButton.Draw(gameTime);
         }
 
         public override void Load()
         {
-            var buttonSize = new Point(128, 32);
+            var buttonResources = new Button.Resources()
+            {
+                PressedTexture = this.Game.Content.Load<Texture2D>("ButtonPressed"),
+                ReleasedTexture = this.Game.Content.Load<Texture2D>("ButtonReleased"),
+                Font = this.Game.Content.Load<SpriteFont>("ButtonFont")
+            };
+
+            var buttonSize = new Vector2(128, 32);
             this.playButton = new Button(
-                new Rectangle(
-                    new Point(0, 0),
-                    buttonSize),
-                4,
+                buttonSize,
+                "Play",
                 this.OnPlayPressed,
-                this.Game.Content.Load<Texture2D>("PlayButtonPressed"),
-                this.Game.Content.Load<Texture2D>("PlayButtonReleased"),
-                this.Game.InputManager);
+                buttonResources,
+                this.Game.InputManager)
+            {
+                Margin = 4
+            };
 
             this.playButton.Initialize(this.Game.SpriteBatch);
 
             this.settingsButton = new Button(
-                new Rectangle(
-                    new Point(0, 0),
-                    buttonSize),
-                4,
+                buttonSize,
+                "Settings",
                 this.OnSettingsPressed,
-                this.Game.Content.Load<Texture2D>("SettingsButtonPressed"),
-                this.Game.Content.Load<Texture2D>("SettingsButtonReleased"),
-                this.Game.InputManager);
+                buttonResources,
+                this.Game.InputManager)
+            {
+                Margin = 4
+            };
 
             this.settingsButton.Initialize(this.Game.SpriteBatch);
+
+            this.quitButton = new Button(
+                buttonSize,
+                "Quit",
+                () => this.Game.Exit(),
+                buttonResources,
+                this.Game.InputManager)
+            {
+                Margin = 4
+            };
+
+            this.quitButton.Initialize(this.Game.SpriteBatch);
 
             this.buttonLayout = new VerticalLayout(this.Game.ScreenManager)
             {
@@ -56,6 +76,7 @@
 
             this.buttonLayout.Items.Add(this.playButton);
             this.buttonLayout.Items.Add(this.settingsButton);
+            this.buttonLayout.Items.Add(this.quitButton);
 
             this.buttonLayout.Initialize();
         }
@@ -68,6 +89,7 @@
         {
             this.playButton.Update(gameTime);
             this.settingsButton.Update(gameTime);
+            this.quitButton.Update(gameTime);
 
             double t = gameTime.TotalGameTime.TotalSeconds;
 
