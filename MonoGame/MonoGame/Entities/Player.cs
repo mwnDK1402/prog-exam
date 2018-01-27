@@ -19,7 +19,7 @@
 
         public Player(ContentManager content, SpriteBatch spriteBatch, Vector2 position)
         {
-            this.texture = content.Load<Texture2D>("Dal");
+            this.texture = content.Load<Texture2D>("Char");
             this.spriteBatch = spriteBatch;
             this.position = position;
 

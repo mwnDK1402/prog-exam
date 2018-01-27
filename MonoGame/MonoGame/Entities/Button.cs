@@ -106,7 +106,7 @@
 
         private void OnLeftMouseReleased()
         {
-            if (this.GetMouseIsOnButton())
+            if (this.state == ButtonState.Pressed && this.GetMouseIsOnButton())
             {
                 // Activate button
                 this.pressedAction();

@@ -68,9 +68,14 @@
         {
             this.playButton.Update(gameTime);
             this.settingsButton.Update(gameTime);
+
+            double t = gameTime.TotalGameTime.TotalSeconds;
+
             this.buttonLayout.MiddlePosition = this.Game.ScreenManager.Viewport.Bounds.Center + new Point(
-                (int)(Math.Cos(gameTime.TotalGameTime.TotalSeconds) * 10),
-                (int)(Math.Sin(gameTime.TotalGameTime.TotalSeconds) * 10));
+                (int)(Math.Cos(t) * 10.0),
+                (int)(Math.Sin(t) * 10.0));
+
+            this.buttonLayout.Spacing = (int)((Math.Sin(t) + 1) * 10.0);
         }
 
         private void OnPlayPressed()
@@ -80,6 +85,7 @@
 
         private void OnSettingsPressed()
         {
+            this.buttonLayout.Items.Remove(this.settingsButton);
             ////throw new NotImplementedException();
         }
     }
