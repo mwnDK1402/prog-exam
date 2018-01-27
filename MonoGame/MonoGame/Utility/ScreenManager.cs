@@ -1,5 +1,6 @@
 ﻿namespace MonoGame.Utility
 {
+    using System;
     using Microsoft.Xna.Framework;
     using Microsoft.Xna.Framework.Graphics;
 
@@ -7,24 +8,34 @@
     {
         private GraphicsDevice graphicsDevice;
 
-        public ScreenManager(GraphicsDevice graphicsDevice)
+        public ScreenManager(MonoGame game)
         {
-            this.graphicsDevice = graphicsDevice;
+            this.graphicsDevice = game.GraphicsDevice;
+            this.Viewport = this.graphicsDevice.Viewport;
         }
+
+        public event Action<Viewport> ViewportChanged;
 
         public int ScreenHeight
         {
-            get { return this.graphicsDevice.Viewport.Height; }
-        }
-
-        public Point ScreenSize
-        {
-            get { return new Point(this.graphicsDevice.Viewport.Width, this.graphicsDevice.Viewport.Height); }
+            get { return this.Viewport.Height; }
         }
 
         public int ScreenWidth
         {
-            get { return this.graphicsDevice.Viewport.Width; }
+            get { return this.Viewport.Width; }
+        }
+
+        public Viewport Viewport { get; private set; }
+
+        public void Update(GameTime gameTime)
+        {
+            var newViewport = this.graphicsDevice.Viewport;
+            if (this.Viewport.Equals(newViewport))
+            {
+                this.Viewport = newViewport;
+                this.ViewportChanged?.Invoke(this.Viewport);
+            }
         }
     }
 }

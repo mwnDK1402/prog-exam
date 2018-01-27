@@ -1,12 +1,12 @@
 ﻿namespace MonoGame
 {
     using System;
-    using Utility;
     using Microsoft.Xna.Framework;
     using Microsoft.Xna.Framework.Graphics;
     using Microsoft.Xna.Framework.Input;
+    using Utility;
 
-    internal sealed class Button : Entity
+    internal sealed class Button : Entity, IPosition
     {
         private Rectangle drawRect, inputRect;
         private Action pressedAction;
@@ -31,6 +31,21 @@
             this.inputRect = new Rectangle(
                 this.drawRect.Location + new Point(margin, margin),
                 this.drawRect.Size - new Point(margin * 2, margin * 2));
+        }
+
+        Vector2 IPosition.Position
+        {
+            get
+            {
+                return this.drawRect.Location.ToVector2();
+            }
+
+            set
+            {
+                var newRect = this.drawRect;
+                newRect.Location = value.ToPoint();
+                this.drawRect = newRect;
+            }
         }
 
         public override void Draw(GameTime gameTime)

@@ -53,7 +53,7 @@
         {
             //// TODO: Add your initialization logic here
             this.InputManager = new InputManager();
-            this.ScreenManager = new ScreenManager(this.GraphicsDevice);
+            this.ScreenManager = new ScreenManager(this);
             this.IsMouseVisible = true;
 
             base.Initialize();
@@ -70,6 +70,7 @@
             this.SceneManager = new SceneManager()
             {
                 // Dependent on Content, spriteBatch, inputManager, and screenManager being initialized
+                // This ambiguity is a downside of implicit dependencies through access to public properties
                 ActiveScene = new MainMenuScene(this)
             };
         }
@@ -97,8 +98,9 @@
             }
 
             //// TODO: Add your update logic here
-            this.SceneManager.Update(gameTime);
             this.InputManager.Update(gameTime);
+            this.SceneManager.Update(gameTime);
+            this.ScreenManager.Update(gameTime);
 
             base.Update(gameTime);
         }

@@ -42,7 +42,8 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="Entities\Button.cs" />
-    <Compile Include="SceneManager.cs" />
+    <Compile Include="Entities\IPosition.cs" />
+    <Compile Include="Utility\SceneManager.cs" />
     <Compile Include="Scenes\GameScene.cs" />
     <Compile Include="Entities\Entity.cs" />
     <Compile Include="Scenes\MainMenuScene.cs" />

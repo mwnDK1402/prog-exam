@@ -1,7 +1,7 @@
-﻿using Microsoft.Xna.Framework;
-
-namespace MonoGame
+﻿namespace MonoGame.Utility
 {
+    using Microsoft.Xna.Framework;
+
     internal sealed class SceneManager
     {
         private Scene activeScene;
