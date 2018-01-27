@@ -34,7 +34,7 @@
             this.playButton = new Button(
                 buttonSize,
                 "Play",
-                this.OnPlayPressed,
+                () => this.Game.SceneManager.ActiveScene = new GameScene(this.Game),
                 buttonResources,
                 this.Game.InputManager)
             {
@@ -46,7 +46,7 @@
             this.settingsButton = new Button(
                 buttonSize,
                 "Settings",
-                this.OnSettingsPressed,
+                () => this.Game.SceneManager.ActiveScene = new SettingsMenuScene(this.Game),
                 buttonResources,
                 this.Game.InputManager)
             {
@@ -98,16 +98,6 @@
                 (int)(Math.Sin(t) * 10.0));
 
             this.buttonLayout.Spacing = (int)((Math.Sin(t) + 1) * 10.0);
-        }
-
-        private void OnPlayPressed()
-        {
-            this.Game.SceneManager.ActiveScene = new GameScene(this.Game);
-        }
-
-        private void OnSettingsPressed()
-        {
-            this.Game.SceneManager.ActiveScene = new SettingsMenuScene(this.Game);
         }
     }
 }

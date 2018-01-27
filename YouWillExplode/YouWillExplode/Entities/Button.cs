@@ -25,10 +25,8 @@
             this.TryResize(text);
         }
 
-        /// <summary>
-        /// It may be gross to use a <see cref="Vector2"/> here, but I don't see any other way as of now.
-        /// I'd rather not expose the <see cref="Rectangle"/> of the <see cref="Button"/>.
-        /// </summary>
+        // It may be gross to use a Vector2 here, but I don't see any other way as of now
+        // I'd rather not expose the Rectangle of the Button
         public Button(Vector2 size, string text, Action pressedAction, Resources resources, InputManager inputManager)
             : this(text, pressedAction, resources, inputManager)
         {
