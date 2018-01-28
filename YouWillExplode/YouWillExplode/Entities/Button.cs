@@ -8,15 +8,14 @@
 
     internal sealed class Button : Entity, ILayoutElement
     {
-        private static readonly Color TextColor = Color.White;
         private static readonly Vector2 TextPadding = new Vector2(10, 2);
+        private readonly Action pressedAction;
+        private readonly Resources resources;
+        private readonly string text;
+        private readonly Vector2 textSize;
         private Rectangle drawRect, inputRect;
         private int margin;
-        private Action pressedAction;
-        private Resources resources;
         private ButtonState state;
-        private string text;
-        private Vector2 textSize;
 
         public Button(Rectangle rect, string text, Action pressedAction, Resources resources, InputManager inputManager)
             : this(text, pressedAction, resources, inputManager)
@@ -101,6 +100,8 @@
             }
         }
 
+        public Color TextColor { get; set; } = Color.White;
+
         // May be completely useless
         private Rectangle DrawRect
         {
@@ -135,7 +136,7 @@
                 this.resources.Font,
                 this.text,
                 this.drawRect.Center.ToVector2() - (new Vector2(this.textSize.X, this.textSize.Y) * 0.5f),
-                TextColor);
+                this.TextColor);
         }
 
         public override void Update(GameTime gameTime)
