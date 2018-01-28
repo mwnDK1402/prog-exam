@@ -22,6 +22,8 @@
                 Font = this.Game.Content.Load<SpriteFont>("ButtonFont")
             };
 
+            int margin = 4;
+
             var buttonSize = new Vector2(128, 32);
 
             var playButton = new Button(
@@ -30,7 +32,7 @@
                 () => this.Game.SceneManager.ActiveScene = new GameScene(this.Game),
                 buttonResources)
             {
-                Margin = 4
+                Margin = margin
             };
 
             var settingsButton = new Button(
@@ -39,7 +41,7 @@
                 () => this.Game.SceneManager.ActiveScene = new SettingsMenuScene(this.Game),
                 buttonResources)
             {
-                Margin = 4
+                Margin = margin
             };
 
             var quitButton = new Button(
@@ -48,7 +50,7 @@
                 () => this.Game.Exit(),
                 buttonResources)
             {
-                Margin = 4
+                Margin = margin
             };
 
             this.buttonLayout = new VerticalLayout(this.Game.ScreenManager)

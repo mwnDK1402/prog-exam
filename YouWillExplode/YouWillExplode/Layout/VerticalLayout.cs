@@ -120,7 +120,7 @@
         {
             Action remover = () => this.Items.Remove(item);
             this.removerByItem.Add(item, remover);
-            item.Terminated += this.removerByItem[item];
+            item.Terminated += remover;
             this.OnItemsChanged();
         }
 

@@ -1,7 +1,7 @@
-﻿using System;
-
-namespace YouWillExplode
+﻿namespace YouWillExplode
 {
+    using System;
+
     internal abstract class Entity : IManageable
     {
         public event Action Terminated;

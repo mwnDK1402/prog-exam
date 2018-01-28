@@ -6,13 +6,16 @@
 
     internal sealed class SettingsMenuScene : Scene
     {
+        private Button.Resources buttonResources;
+        private VerticalLayout removeableButtonLayout;
+
         public SettingsMenuScene(YouWillExplode game) : base(game)
         {
         }
 
         protected override void OnLoad()
         {
-            var resources = new Button.Resources()
+            this.buttonResources = new Button.Resources()
             {
                 PressedTexture = this.Game.Content.Load<Texture2D>("ButtonPressed"),
                 ReleasedTexture = this.Game.Content.Load<Texture2D>("ButtonReleased"),
@@ -23,27 +26,46 @@
                 new Rectangle(8, this.Game.ScreenManager.ScreenHeight - 40, 92, 32),
                 "Back",
                 () => this.Game.SceneManager.ActiveScene = new MainMenuScene(this.Game),
-                resources);
+                this.buttonResources);
 
             this.Manage(backButton);
 
+            var createButtonButton = new Button(
+                new Rectangle(),
+                "+",
+                this.AddNewButton,
+                this.buttonResources);
+
+            this.Manage(createButtonButton);
+
             // Create layout
-            var removeableButtonLayout = new VerticalLayout(this.Game.ScreenManager);
-            this.Manage(removeableButtonLayout);
+            this.removeableButtonLayout = new VerticalLayout(this.Game.ScreenManager)
+            {
+                Spacing = 4
+            };
+
+            this.Manage(this.removeableButtonLayout);
 
             // Populate layout with buttons
+            this.removeableButtonLayout.Items.Add(createButtonButton);
+
             for (int i = 0; i < 5; ++i)
             {
-                RemoveableButton button = this.GetNewButton(resources);
-                removeableButtonLayout.Items.Add(button);
-                this.Manage(button);
+                this.AddNewButton();
             }
 
             // Set layout position
-            removeableButtonLayout.MiddlePosition = this.Game.ScreenManager.Viewport.Bounds.Center;
+            this.removeableButtonLayout.MiddlePosition = this.Game.ScreenManager.Viewport.Bounds.Center;
         }
 
-        private RemoveableButton GetNewButton(Button.Resources resources)
+        private void AddNewButton()
+        {
+            RemoveableButton button = this.GetNewButton();
+            this.removeableButtonLayout.Items.Add(button);
+            this.Manage(button);
+        }
+
+        private RemoveableButton GetNewButton()
         {
             var newButton =
                 new RemoveableButton(
@@ -51,8 +73,8 @@
                         new Vector2(92, 32),
                         "Test",
                         () => { },
-                        resources),
-                    resources)
+                        this.buttonResources),
+                    this.buttonResources)
                 {
                     Spacing = 4
                 };

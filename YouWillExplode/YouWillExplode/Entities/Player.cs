@@ -36,13 +36,6 @@
             this.spriteBatch.DrawString(this.nameFont, CharacterName, textPosition, NameColor);
         }
 
-        protected override void OnInitialized(Scene scene)
-        {
-            this.texture = scene.Game.Content.Load<Texture2D>("Char");
-            this.spriteBatch = scene.Game.SpriteBatch;
-            this.nameFont = scene.Game.Content.Load<SpriteFont>("NameFont");
-        }
-
         void IUpdateable.Update(GameTime gameTime)
         {
             KeyboardState keyboard = Keyboard.GetState();
@@ -73,6 +66,13 @@
             }
 
             this.rawPosition += this.velocity * (float)gameTime.ElapsedGameTime.TotalSeconds;
+        }
+
+        protected override void OnInitialized(Scene scene)
+        {
+            this.texture = scene.Game.Content.Load<Texture2D>("Char");
+            this.spriteBatch = scene.Game.SpriteBatch;
+            this.nameFont = scene.Game.Content.Load<SpriteFont>("NameFont");
         }
 
         private void UpdateRect() =>
