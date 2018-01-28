@@ -22,10 +22,10 @@
         {
             screenManager.ViewportChanged += this.OnViewportChanged;
             this.Items.Changed += this.OnItemsChanged;
-            this.Alignment = LayoutAlignment.Middle;
+            this.Alignment = Alignment.Middle;
         }
 
-        public LayoutAlignment Alignment { get; set; }
+        public Alignment Alignment { get; set; }
 
         Rectangle ILayoutElement.Bounds => this.bounds;
 
@@ -82,13 +82,13 @@
         {
             switch (this.Alignment)
             {
-                case LayoutAlignment.Left:
+                case Alignment.Left:
                     return this.bounds.GetLeftPosition();
 
-                case LayoutAlignment.Middle:
+                case Alignment.Middle:
                     return this.bounds.Center;
 
-                case LayoutAlignment.Right:
+                case Alignment.Right:
                     return this.bounds.GetRightPosition();
 
                 default:
@@ -151,15 +151,15 @@
         {
             switch (this.Alignment)
             {
-                case LayoutAlignment.Left:
+                case Alignment.Left:
                     RectangleUtility.SetLeftPosition(ref newBounds, fixedPosition);
                     break;
 
-                case LayoutAlignment.Middle:
+                case Alignment.Middle:
                     RectangleUtility.SetMiddlePosition(ref newBounds, fixedPosition);
                     break;
 
-                case LayoutAlignment.Right:
+                case Alignment.Right:
                     RectangleUtility.SetRightPosition(ref newBounds, fixedPosition);
                     break;
             }
@@ -170,7 +170,7 @@
             int aggregateY = this.bounds.Y;
             switch (this.Alignment)
             {
-                case LayoutAlignment.Left:
+                case Alignment.Left:
                     for (int i = 0; i < this.Items.Count; i++)
                     {
                         var item = this.Items[i].Bounds;
@@ -180,7 +180,7 @@
 
                     break;
 
-                case LayoutAlignment.Middle:
+                case Alignment.Middle:
                     for (int i = 0; i < this.Items.Count; i++)
                     {
                         var item = this.Items[i].Bounds;
@@ -190,7 +190,7 @@
 
                     break;
 
-                case LayoutAlignment.Right:
+                case Alignment.Right:
                     for (int i = 0; i < this.Items.Count; i++)
                     {
                         var item = this.Items[i].Bounds;

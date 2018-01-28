@@ -54,9 +54,9 @@
             this.state = ButtonState.Released;
         }
 
-        Rectangle ILayoutElement.Bounds => this.drawRect;
+        public Rectangle Bounds => this.drawRect;
 
-        Point ILayoutElement.LeftPosition
+        public Point LeftPosition
         {
             get => this.drawRect.GetLeftPosition();
 
@@ -78,7 +78,7 @@
             }
         }
 
-        Point ILayoutElement.MiddlePosition
+        public Point MiddlePosition
         {
             get => this.drawRect.Center;
 
@@ -89,7 +89,7 @@
             }
         }
 
-        Point ILayoutElement.RightPosition
+        public Point RightPosition
         {
             get => this.drawRect.GetRightPosition();
 
@@ -181,7 +181,7 @@
 
         private void TryResize(string text)
         {
-            var fixedPosition = ((ILayoutElement)this).MiddlePosition;
+            var fixedPosition = this.MiddlePosition;
 
             var textSize = this.TextBounds;
             var difference = this.drawRect.Size.ToVector2() - textSize;
@@ -195,7 +195,7 @@
                 this.drawRect.Height = (int)Math.Ceiling(textSize.Y);
             }
 
-            ((ILayoutElement)this).MiddlePosition = fixedPosition;
+            this.MiddlePosition = fixedPosition;
 
             this.RecalculateInputRect();
         }

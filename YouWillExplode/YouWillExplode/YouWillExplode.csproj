@@ -43,6 +43,7 @@
   <ItemGroup>
     <Compile Include="Collections\MonitoredList.cs" />
     <Compile Include="Entities\Button.cs" />
+    <Compile Include="Entities\RemoveableButton.cs" />
     <Compile Include="Layout\IPosition.cs" />
     <Compile Include="Layout\LayoutAlignment.cs" />
     <Compile Include="Layout\VerticalLayout.cs" />

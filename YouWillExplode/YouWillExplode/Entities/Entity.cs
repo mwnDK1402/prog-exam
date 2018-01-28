@@ -13,10 +13,8 @@
 
         public abstract void Draw(GameTime gameTime);
 
-        public virtual void Initialize(SpriteBatch spriteBatch)
-        {
+        public virtual void Initialize(SpriteBatch spriteBatch) =>
             this.SpriteBatch = spriteBatch;
-        }
 
         public virtual void Update(GameTime gameTime)
         {

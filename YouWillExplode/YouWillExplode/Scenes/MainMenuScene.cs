@@ -69,7 +69,7 @@
 
             this.buttonLayout = new VerticalLayout(this.Game.ScreenManager)
             {
-                Alignment = LayoutAlignment.Middle,
+                Alignment = Alignment.Middle,
                 MiddlePosition = this.Game.ScreenManager.Viewport.Bounds.Center,
                 Spacing = 20
             };

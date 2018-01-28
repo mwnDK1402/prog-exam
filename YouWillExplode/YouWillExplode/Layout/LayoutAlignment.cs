@@ -1,6 +1,6 @@
 ﻿namespace YouWillExplode.Layout
 {
-    public enum LayoutAlignment
+    public enum Alignment
     {
         Left,
         Middle,
