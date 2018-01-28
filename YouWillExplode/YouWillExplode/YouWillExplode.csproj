@@ -43,15 +43,17 @@
   <ItemGroup>
     <Compile Include="Collections\MonitoredList.cs" />
     <Compile Include="Entities\Button.cs" />
+    <Compile Include="Entities\IDestructible.cs" />
+    <Compile Include="Entities\IDrawable.cs" />
+    <Compile Include="Entities\IUpdateable.cs" />
     <Compile Include="Entities\RemoveableButton.cs" />
     <Compile Include="Layout\IPosition.cs" />
-    <Compile Include="Layout\LayoutAlignment.cs" />
+    <Compile Include="Layout\Alignment.cs" />
     <Compile Include="Layout\VerticalLayout.cs" />
     <Compile Include="Scenes\SettingsMenuScene.cs" />
     <Compile Include="Utility\RectangleUtility.cs" />
     <Compile Include="Managers\SceneManager.cs" />
     <Compile Include="Scenes\GameScene.cs" />
-    <Compile Include="Entities\Entity.cs" />
     <Compile Include="Scenes\MainMenuScene.cs" />
     <Compile Include="Scenes\Scene.cs" />
     <Compile Include="Entities\Laser.cs" />

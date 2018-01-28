@@ -5,7 +5,7 @@
     internal sealed class SceneManager
     {
         private Scene activeScene;
-        
+
         public Scene ActiveScene
         {
             set
@@ -24,14 +24,10 @@
             }
         }
 
-        public void Draw(GameTime gameTime)
-        {
+        public void Draw(GameTime gameTime) =>
             this.activeScene.Draw(gameTime);
-        }
 
-        public void Update(GameTime gameTime)
-        {
+        public void Update(GameTime gameTime) =>
             this.activeScene.Update(gameTime);
-        }
     }
 }

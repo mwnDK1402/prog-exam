@@ -1,48 +1,53 @@
 ﻿namespace YouWillExplode
 {
     using Microsoft.Xna.Framework;
-    using Microsoft.Xna.Framework.Content;
     using Microsoft.Xna.Framework.Graphics;
     using Microsoft.Xna.Framework.Input;
 
-    internal sealed class Player
+    internal sealed class Player : IManaged, IUpdateable, IDrawable
     {
         private const float NameElevation = 5f, Speed = 100f;
         private static readonly string CharacterName = "Player";
         private static readonly Color NameColor = Color.Red;
         private static readonly Point Size = new Point(200, 200);
         private SpriteFont nameFont;
-        private Vector2 position, velocity;
+        private Vector2 rawPosition, velocity;
         private Rectangle rect;
         private SpriteBatch spriteBatch;
         private Texture2D texture;
 
-        public Player(ContentManager content, SpriteBatch spriteBatch, Vector2 position)
+        public Player(Vector2 position)
         {
-            this.texture = content.Load<Texture2D>("Char");
-            this.spriteBatch = spriteBatch;
-            this.position = position;
-
+            this.rawPosition = position;
             this.rect.Location = position.ToPoint();
             this.rect.Size = Size;
-
-            this.nameFont = content.Load<SpriteFont>("NameFont");
         }
 
-        public void Draw(GameTime gamemTime)
+        void IDrawable.Draw(GameTime gamemTime)
         {
             this.UpdateRect();
             this.spriteBatch.Draw(this.texture, this.rect, Color.White);
 
-            var fontSize = this.nameFont.MeasureString(CharacterName);
-            var textPosition = this.rect.Center.ToVector2()
+            Vector2 fontSize = this.nameFont.MeasureString(CharacterName);
+            Vector2 textPosition = this.rect.Center.ToVector2()
                 + new Vector2(
                     -fontSize.X * 0.5f,
                     (-this.rect.Height * 0.5f) - fontSize.Y - NameElevation);
             this.spriteBatch.DrawString(this.nameFont, CharacterName, textPosition, NameColor);
         }
 
-        public void Update(GameTime gameTime)
+        void IManaged.Initialize(Scene scene)
+        {
+            this.texture = scene.Game.Content.Load<Texture2D>("Char");
+            this.spriteBatch = scene.Game.SpriteBatch;
+            this.nameFont = scene.Game.Content.Load<SpriteFont>("NameFont");
+        }
+
+        void IManaged.Terminate()
+        {
+        }
+
+        void IUpdateable.Update(GameTime gameTime)
         {
             KeyboardState keyboard = Keyboard.GetState();
             if (keyboard.IsKeyDown(Keys.W))
@@ -71,12 +76,10 @@
                 this.velocity.X = 0f;
             }
 
-            this.position += this.velocity * (float)gameTime.ElapsedGameTime.TotalSeconds;
+            this.rawPosition += this.velocity * (float)gameTime.ElapsedGameTime.TotalSeconds;
         }
 
-        private void UpdateRect()
-        {
-            this.rect.Location = this.position.ToPoint();
-        }
+        private void UpdateRect() =>
+            this.rect.Location = this.rawPosition.ToPoint();
     }
 }

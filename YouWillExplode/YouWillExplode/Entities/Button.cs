@@ -6,7 +6,7 @@
     using Microsoft.Xna.Framework.Input;
     using Utility;
 
-    internal sealed class Button : Entity, ILayoutElement
+    internal sealed class Button : ILayoutElement, IManaged, IDrawable, IUpdateable
     {
         private static readonly Vector2 TextPadding = new Vector2(10, 2);
         private readonly Action pressedAction;
@@ -15,10 +15,12 @@
         private readonly Vector2 textSize;
         private Rectangle drawRect, inputRect;
         private int margin;
+        private Scene scene;
+        private SpriteBatch spriteBatch;
         private ButtonState state;
 
-        public Button(Rectangle rect, string text, Action pressedAction, Resources resources, InputManager inputManager)
-            : this(text, pressedAction, resources, inputManager)
+        public Button(Rectangle rect, string text, Action pressedAction, Resources resources)
+            : this(text, pressedAction, resources)
         {
             this.drawRect = this.inputRect = rect;
             this.TryResize(text);
@@ -26,30 +28,27 @@
 
         // It may be gross to use a Vector2 here, but I don't see any other way as of now
         // I'd rather not expose the Rectangle of the Button
-        public Button(Vector2 size, string text, Action pressedAction, Resources resources, InputManager inputManager)
-            : this(text, pressedAction, resources, inputManager)
+        public Button(Vector2 size, string text, Action pressedAction, Resources resources)
+            : this(text, pressedAction, resources)
         {
             this.drawRect.Size = this.inputRect.Size = size.ToPoint();
             this.TryResize(text);
         }
 
-        public Button(Point position, string text, Action pressedAction, Resources resources, InputManager inputManager)
-            : this(text, pressedAction, resources, inputManager)
+        public Button(Point position, string text, Action pressedAction, Resources resources)
+            : this(text, pressedAction, resources)
         {
             this.drawRect.Location = this.inputRect.Location = position;
             this.TryResize(text);
         }
 
-        private Button(string text, Action pressedAction, Resources resources, InputManager inputManager)
+        private Button(string text, Action pressedAction, Resources resources)
         {
             this.pressedAction = pressedAction;
             this.resources = resources;
 
             this.text = text;
             this.textSize = resources.Font.MeasureString(text);
-
-            inputManager.LeftMousePressed += this.OnLeftMousePressed;
-            inputManager.LeftMouseReleased += this.OnLeftMouseReleased;
 
             this.state = ButtonState.Released;
         }
@@ -119,27 +118,42 @@
             get => this.textSize + (2 * TextPadding);
         }
 
-        public override void Draw(GameTime gameTime)
+        void IDrawable.Draw(GameTime gameTime)
         {
             switch (this.state)
             {
                 case ButtonState.Released:
-                    this.SpriteBatch.Draw(this.resources.ReleasedTexture, this.drawRect, Color.White);
+                    this.spriteBatch.Draw(this.resources.ReleasedTexture, this.drawRect, Color.White);
                     break;
 
                 case ButtonState.Pressed:
-                    this.SpriteBatch.Draw(this.resources.PressedTexture, this.drawRect, Color.White);
+                    this.spriteBatch.Draw(this.resources.PressedTexture, this.drawRect, Color.White);
                     break;
             }
 
-            this.SpriteBatch.DrawString(
+            this.spriteBatch.DrawString(
                 this.resources.Font,
                 this.text,
                 this.drawRect.Center.ToVector2() - (new Vector2(this.textSize.X, this.textSize.Y) * 0.5f),
                 this.TextColor);
         }
 
-        public override void Update(GameTime gameTime)
+        void IManaged.Initialize(Scene scene)
+        {
+            this.scene = scene;
+            this.spriteBatch = scene.Game.SpriteBatch;
+
+            scene.Game.InputManager.LeftMousePressed += this.OnLeftMousePressed;
+            scene.Game.InputManager.LeftMouseReleased += this.OnLeftMouseReleased;
+        }
+
+        void IManaged.Terminate()
+        {
+            this.scene.Game.InputManager.LeftMousePressed -= this.OnLeftMousePressed;
+            this.scene.Game.InputManager.LeftMouseReleased -= this.OnLeftMouseReleased;
+        }
+
+        void IUpdateable.Update(GameTime gameTime)
         {
             if (!this.GetMouseIsOnButton())
             {

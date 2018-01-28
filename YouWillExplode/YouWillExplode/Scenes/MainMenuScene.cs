@@ -8,20 +8,12 @@
     internal sealed class MainMenuScene : Scene
     {
         private VerticalLayout buttonLayout;
-        private Button playButton, settingsButton, quitButton;
 
         public MainMenuScene(YouWillExplode game) : base(game)
         {
         }
 
-        public override void Draw(GameTime gameTime)
-        {
-            this.playButton.Draw(gameTime);
-            this.settingsButton.Draw(gameTime);
-            this.quitButton.Draw(gameTime);
-        }
-
-        public override void Load()
+        protected override void OnLoad()
         {
             var buttonResources = new Button.Resources()
             {
@@ -31,41 +23,33 @@
             };
 
             var buttonSize = new Vector2(128, 32);
-            this.playButton = new Button(
+
+            var playButton = new Button(
                 buttonSize,
                 "Play",
                 () => this.Game.SceneManager.ActiveScene = new GameScene(this.Game),
-                buttonResources,
-                this.Game.InputManager)
+                buttonResources)
             {
                 Margin = 4
             };
 
-            this.playButton.Initialize(this.Game.SpriteBatch);
-
-            this.settingsButton = new Button(
+            var settingsButton = new Button(
                 buttonSize,
                 "Settings",
                 () => this.Game.SceneManager.ActiveScene = new SettingsMenuScene(this.Game),
-                buttonResources,
-                this.Game.InputManager)
+                buttonResources)
             {
                 Margin = 4
             };
 
-            this.settingsButton.Initialize(this.Game.SpriteBatch);
-
-            this.quitButton = new Button(
+            var quitButton = new Button(
                 buttonSize,
                 "Quit",
                 () => this.Game.Exit(),
-                buttonResources,
-                this.Game.InputManager)
+                buttonResources)
             {
                 Margin = 4
             };
-
-            this.quitButton.Initialize(this.Game.SpriteBatch);
 
             this.buttonLayout = new VerticalLayout(this.Game.ScreenManager)
             {
@@ -74,23 +58,19 @@
                 Spacing = 20
             };
 
-            this.buttonLayout.Items.Add(this.playButton);
-            this.buttonLayout.Items.Add(this.settingsButton);
-            this.buttonLayout.Items.Add(this.quitButton);
+            this.buttonLayout.Items.Add(playButton);
+            this.buttonLayout.Items.Add(settingsButton);
+            this.buttonLayout.Items.Add(quitButton);
 
-            this.buttonLayout.Initialize();
+            this.Manage(playButton);
+            this.Manage(settingsButton);
+            this.Manage(quitButton);
+
+            this.Manage(this.buttonLayout);
         }
 
-        public override void Unload()
+        protected override void OnUpdated(GameTime gameTime)
         {
-        }
-
-        public override void Update(GameTime gameTime)
-        {
-            this.playButton.Update(gameTime);
-            this.settingsButton.Update(gameTime);
-            this.quitButton.Update(gameTime);
-
             double t = gameTime.TotalGameTime.TotalSeconds;
 
             this.buttonLayout.MiddlePosition = this.Game.ScreenManager.Viewport.Bounds.Center + new Point(

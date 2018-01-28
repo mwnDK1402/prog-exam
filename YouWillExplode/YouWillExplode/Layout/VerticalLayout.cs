@@ -10,7 +10,7 @@
     /// Controls and makes it easy to align the position of <see cref="ILayoutElement"/>s.
     /// </summary>
     /// <remarks>Add screen alignment.</remarks>
-    internal sealed class VerticalLayout : ILayoutElement
+    internal sealed class VerticalLayout : ILayoutElement, IManaged
     {
         public readonly MonitoredList<ILayoutElement> Items = new MonitoredList<ILayoutElement>();
 
@@ -73,7 +73,11 @@
             }
         }
 
-        public void Initialize() => this.RecalculateBounds();
+        void IManaged.Initialize(Scene scene) => this.RecalculateBounds();
+
+        void IManaged.Terminate()
+        {
+        }
 
         private Point GetFixedPosition()
         {

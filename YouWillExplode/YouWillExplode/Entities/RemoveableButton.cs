@@ -1,25 +1,21 @@
 ﻿namespace YouWillExplode
 {
     using Microsoft.Xna.Framework;
-    using Microsoft.Xna.Framework.Graphics;
-    using Utility;
 
-    internal sealed class RemoveableButton : Entity, ILayoutElement
+    internal sealed class RemoveableButton : ILayoutElement, IManaged
     {
         private readonly Button button, removeButton;
-        private bool enabled;
+        private Scene scene;
         private Point spacing;
 
-        public RemoveableButton(Button button, Button.Resources resources, InputManager inputManager)
+        public RemoveableButton(Button button, Button.Resources resources)
         {
-            this.enabled = true;
             this.button = button;
             this.removeButton = new Button(
                 new Rectangle(),
                 "X",
-                this.Remove,
-                resources,
-                inputManager);
+                () => this.scene.Destroy(this),
+                resources);
 
             this.UpdateRemoveButtonPosition();
         }
@@ -73,32 +69,19 @@
             get => this.button.Bounds.Size + this.spacing + this.removeButton.Bounds.Size;
         }
 
-        public override void Draw(GameTime gameTime)
+        void IManaged.Initialize(Scene scene)
         {
-            if (this.enabled)
-            {
-                this.button.Draw(gameTime);
-                this.removeButton.Draw(gameTime);
-            }
+            this.scene = scene;
+
+            scene.Manage(this.button);
+            scene.Manage(this.removeButton);
         }
 
-        public override void Initialize(SpriteBatch spriteBatch)
+        void IManaged.Terminate()
         {
-            base.Initialize(spriteBatch);
-            this.button.Initialize(spriteBatch);
-            this.removeButton.Initialize(spriteBatch);
+            this.scene.Destroy(this.button);
+            this.scene.Destroy(this.removeButton);
         }
-
-        public override void Update(GameTime gameTime)
-        {
-            if (this.enabled)
-            {
-                this.button.Update(gameTime);
-                this.removeButton.Update(gameTime);
-            }
-        }
-
-        private void Remove() => this.enabled = false;
 
         private void UpdateButtonPosition() =>
             this.button.RightPosition = this.removeButton.LeftPosition - this.spacing;
