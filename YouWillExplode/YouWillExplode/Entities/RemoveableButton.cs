@@ -2,7 +2,7 @@
 {
     using Microsoft.Xna.Framework;
 
-    internal sealed class RemoveableButton : ILayoutElement, IManaged
+    internal sealed class RemoveableButton : Entity, ILayoutElement
     {
         private readonly Button button, removeButton;
         private Scene scene;
@@ -69,7 +69,7 @@
             get => this.button.Bounds.Size + this.spacing + this.removeButton.Bounds.Size;
         }
 
-        void IManaged.Initialize(Scene scene)
+        protected override void OnInitialized(Scene scene)
         {
             this.scene = scene;
 
@@ -77,7 +77,7 @@
             scene.Manage(this.removeButton);
         }
 
-        void IManaged.Terminate()
+        protected override void OnTerminated()
         {
             this.scene.Destroy(this.button);
             this.scene.Destroy(this.removeButton);

@@ -4,7 +4,7 @@
     using Microsoft.Xna.Framework.Graphics;
     using Microsoft.Xna.Framework.Input;
 
-    internal sealed class Player : IManaged, IUpdateable, IDrawable
+    internal sealed class Player : Entity, IUpdateable, IDrawable
     {
         private const float NameElevation = 5f, Speed = 100f;
         private static readonly string CharacterName = "Player";
@@ -36,15 +36,11 @@
             this.spriteBatch.DrawString(this.nameFont, CharacterName, textPosition, NameColor);
         }
 
-        void IManaged.Initialize(Scene scene)
+        protected override void OnInitialized(Scene scene)
         {
             this.texture = scene.Game.Content.Load<Texture2D>("Char");
             this.spriteBatch = scene.Game.SpriteBatch;
             this.nameFont = scene.Game.Content.Load<SpriteFont>("NameFont");
-        }
-
-        void IManaged.Terminate()
-        {
         }
 
         void IUpdateable.Update(GameTime gameTime)

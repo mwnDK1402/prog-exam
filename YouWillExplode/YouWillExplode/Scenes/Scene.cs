@@ -5,7 +5,7 @@
 
     internal abstract class Scene
     {
-        private List<IManaged> destructibles = new List<IManaged>();
+        private List<IManageable> destructibles = new List<IManageable>();
         private List<IDrawable> drawables = new List<IDrawable>();
         private List<IUpdateable> updateables = new List<IUpdateable>();
 
@@ -16,7 +16,7 @@
 
         public YouWillExplode Game { get; private set; }
 
-        public void Destroy(IManaged sceneObject)
+        public void Destroy(IManageable sceneObject)
         {
             if (sceneObject == null)
             {
@@ -38,7 +38,7 @@
 
         public void Load() => this.OnLoad();
 
-        public void Manage(IManaged sceneObject)
+        public void Manage(IManageable sceneObject)
         {
             if (sceneObject == null)
             {
@@ -88,7 +88,7 @@
         {
         }
 
-        private void Register(IManaged sceneObject)
+        private void Register(IManageable sceneObject)
         {
             this.destructibles.Add(sceneObject);
 
@@ -103,7 +103,7 @@
             }
         }
 
-        private void Unregister(IManaged sceneObject)
+        private void Unregister(IManageable sceneObject)
         {
             this.destructibles.Remove(sceneObject);
 

@@ -6,7 +6,7 @@
     using Microsoft.Xna.Framework.Input;
     using Utility;
 
-    internal sealed class Button : ILayoutElement, IManaged, IDrawable, IUpdateable
+    internal sealed class Button : Entity, ILayoutElement, IDrawable, IUpdateable
     {
         private static readonly Vector2 TextPadding = new Vector2(10, 2);
         private readonly Action pressedAction;
@@ -138,7 +138,15 @@
                 this.TextColor);
         }
 
-        void IManaged.Initialize(Scene scene)
+        void IUpdateable.Update(GameTime gameTime)
+        {
+            if (!this.GetMouseIsOnButton())
+            {
+                this.state = ButtonState.Released;
+            }
+        }
+
+        protected override void OnInitialized(Scene scene)
         {
             this.scene = scene;
             this.spriteBatch = scene.Game.SpriteBatch;
@@ -147,18 +155,10 @@
             scene.Game.InputManager.LeftMouseReleased += this.OnLeftMouseReleased;
         }
 
-        void IManaged.Terminate()
+        protected override void OnTerminated()
         {
             this.scene.Game.InputManager.LeftMousePressed -= this.OnLeftMousePressed;
             this.scene.Game.InputManager.LeftMouseReleased -= this.OnLeftMouseReleased;
-        }
-
-        void IUpdateable.Update(GameTime gameTime)
-        {
-            if (!this.GetMouseIsOnButton())
-            {
-                this.state = ButtonState.Released;
-            }
         }
 
         private bool GetMouseIsOnButton() =>

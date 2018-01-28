@@ -5,14 +5,16 @@
     using System.Collections.Generic;
 
     /// <summary>
-    /// <see cref="List{T}"/> which exposes a <see cref="Changed"/> event.
+    /// <see cref="List{T}"/> which exposes a <see cref="Added"/> event.
     /// </summary>
     /// <typeparam name="T">Type contained in the list.</typeparam>
     internal sealed class MonitoredList<T> : IList<T>, ICollection<T>, IList, ICollection, IReadOnlyList<T>, IReadOnlyCollection<T>, IEnumerable<T>, IEnumerable
     {
         private List<T> list = new List<T>();
 
-        public event Action Changed;
+        public event Action<T> Added, Removed;
+
+        public event Action Cleared;
 
         public int Count => this.list.Count;
 
@@ -35,10 +37,12 @@
 
             set
             {
+                object oldValue = ((IList)this.list)[index];
                 ((IList)this.list)[index] = value;
 
                 // Setting a value to itself also counts as a change
-                this.Changed?.Invoke();
+                this.Removed?.Invoke((T)oldValue);
+                this.Added?.Invoke((T)value);
             }
         }
 
@@ -51,101 +55,99 @@
 
             set
             {
-                ((IList<T>)this.list)[index] = value;
+                T oldValue = this.list[index];
+                this.list[index] = value;
 
                 // Setting a value to itself also counts as a change
-                this.Changed?.Invoke();
+                this.Removed?.Invoke(oldValue);
+                this.Added?.Invoke(value);
             }
         }
 
         public void Add(T item)
         {
             this.list.Add(item);
-            this.Changed?.Invoke();
+            this.Added?.Invoke(item);
         }
 
         int IList.Add(object value)
         {
             int result = ((IList)this.list).Add(value);
-            this.Changed?.Invoke();
+            this.Added?.Invoke((T)value);
             return result;
         }
 
         public void Clear()
         {
             this.list.Clear();
-            this.Changed?.Invoke();
+            this.Cleared?.Invoke();
         }
 
-        public bool Contains(T item)
-        {
-            return this.list.Contains(item);
-        }
+        public bool Contains(T item) =>
+            this.list.Contains(item);
 
-        bool IList.Contains(object value)
-        {
-            return ((IList)this.list).Contains(value);
-        }
+        bool IList.Contains(object value) =>
+            ((IList)this.list).Contains(value);
 
-        void ICollection.CopyTo(Array array, int index)
-        {
+        void ICollection.CopyTo(Array array, int index) =>
             ((ICollection)this.list).CopyTo(array, index);
-        }
 
-        public void CopyTo(T[] array, int arrayIndex)
-        {
+        public void CopyTo(T[] array, int arrayIndex) =>
             this.list.CopyTo(array, arrayIndex);
-        }
 
-        IEnumerator IEnumerable.GetEnumerator()
-        {
-            return this.list.GetEnumerator();
-        }
+        IEnumerator IEnumerable.GetEnumerator() =>
+            this.list.GetEnumerator();
 
-        public IEnumerator<T> GetEnumerator()
-        {
-            return this.list.GetEnumerator();
-        }
+        public IEnumerator<T> GetEnumerator() =>
+            this.list.GetEnumerator();
 
-        public int IndexOf(T item)
-        {
-            return this.list.IndexOf(item);
-        }
+        public int IndexOf(T item) =>
+            this.list.IndexOf(item);
 
-        int IList.IndexOf(object value)
-        {
-            return ((IList)this.list).IndexOf(value);
-        }
+        int IList.IndexOf(object value) =>
+            ((IList)this.list).IndexOf(value);
 
         public void Insert(int index, T item)
         {
+            T oldValue = this.list[index];
             this.list.Insert(index, item);
-            this.Changed?.Invoke();
+
+            this.Removed?.Invoke(oldValue);
+            this.Added?.Invoke(item);
         }
 
         void IList.Insert(int index, object value)
         {
+            object oldValue = ((IList)this.list)[index];
             ((IList)this.list).Insert(index, value);
-            this.Changed?.Invoke();
+
+            this.Removed?.Invoke((T)oldValue);
+            this.Added?.Invoke((T)value);
         }
 
         public bool Remove(T item)
         {
             bool result = this.list.Remove(item);
-            this.Changed?.Invoke();
+            if (result)
+            {
+                // Only remove if removal succeeded
+                this.Removed?.Invoke(item);
+            }
+
             return result;
         }
 
         void IList.Remove(object value)
         {
             ((IList)this.list).Remove(value);
-            this.Changed?.Invoke();
+            this.Removed?.Invoke((T)value);
         }
 
         public void RemoveAt(int index)
         {
+            T value = this.list[index];
             this.list.RemoveAt(index);
-            this.Changed?.Invoke();
+            this.Removed?.Invoke(value);
         }
     }
 }

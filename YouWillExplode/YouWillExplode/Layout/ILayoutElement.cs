@@ -2,7 +2,7 @@
 {
     using Microsoft.Xna.Framework;
 
-    internal interface ILayoutElement
+    internal interface ILayoutElement : IManageable
     {
         Rectangle Bounds { get; }
 

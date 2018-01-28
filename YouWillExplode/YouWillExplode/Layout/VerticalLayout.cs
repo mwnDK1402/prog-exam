@@ -1,6 +1,7 @@
 ﻿namespace YouWillExplode.Layout
 {
     using System;
+    using System.Collections.Generic;
     using Collections;
     using Microsoft.Xna.Framework;
     using Microsoft.Xna.Framework.Graphics;
@@ -10,18 +11,18 @@
     /// Controls and makes it easy to align the position of <see cref="ILayoutElement"/>s.
     /// </summary>
     /// <remarks>Add screen alignment.</remarks>
-    internal sealed class VerticalLayout : ILayoutElement, IManaged
+    internal sealed class VerticalLayout : Entity, ILayoutElement
     {
         public readonly MonitoredList<ILayoutElement> Items = new MonitoredList<ILayoutElement>();
-
         private Rectangle bounds;
-
+        private Dictionary<ILayoutElement, Action> removerByItem = new Dictionary<ILayoutElement, Action>();
         private int spacing;
 
         public VerticalLayout(ScreenManager screenManager)
         {
             screenManager.ViewportChanged += this.OnViewportChanged;
-            this.Items.Changed += this.OnItemsChanged;
+            this.Items.Added += this.OnItemAdded;
+            this.Items.Removed += this.OnItemRemoved;
             this.Alignment = Alignment.Middle;
         }
 
@@ -73,11 +74,7 @@
             }
         }
 
-        void IManaged.Initialize(Scene scene) => this.RecalculateBounds();
-
-        void IManaged.Terminate()
-        {
-        }
+        protected override void OnInitialized(Scene scene) => this.RecalculateBounds();
 
         private Point GetFixedPosition()
         {
@@ -117,6 +114,21 @@
             aggregateheight -= this.Spacing;
 
             return new Point(greatestWidth, aggregateheight);
+        }
+
+        private void OnItemAdded(ILayoutElement item)
+        {
+            Action remover = () => this.Items.Remove(item);
+            this.removerByItem.Add(item, remover);
+            item.Terminated += this.removerByItem[item];
+            this.OnItemsChanged();
+        }
+
+        private void OnItemRemoved(ILayoutElement item)
+        {
+            item.Terminated -= this.removerByItem[item];
+            this.removerByItem.Remove(item);
+            this.OnItemsChanged();
         }
 
         private void OnItemsChanged() => this.RecalculateBounds();

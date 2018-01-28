@@ -1,7 +1,11 @@
 ﻿namespace YouWillExplode
 {
-    internal interface IManaged
+    using System;
+
+    internal interface IManageable
     {
+        event Action Terminated;
+
         void Initialize(Scene scene);
 
         void Terminate();
