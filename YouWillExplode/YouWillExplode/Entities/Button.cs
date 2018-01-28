@@ -147,10 +147,8 @@
             }
         }
 
-        private bool GetMouseIsOnButton()
-        {
-            return this.inputRect.Contains(Mouse.GetState().Position);
-        }
+        private bool GetMouseIsOnButton() =>
+            this.inputRect.Contains(Mouse.GetState().Position);
 
         private void OnLeftMousePressed()
         {
@@ -181,10 +179,10 @@
 
         private void TryResize(string text)
         {
-            var fixedPosition = this.MiddlePosition;
+            Point fixedPosition = this.MiddlePosition;
 
-            var textSize = this.TextBounds;
-            var difference = this.drawRect.Size.ToVector2() - textSize;
+            Vector2 textSize = this.TextBounds;
+            Vector2 difference = this.drawRect.Size.ToVector2() - textSize;
             if (difference.X < 0)
             {
                 this.drawRect.Width = (int)Math.Ceiling(textSize.X);

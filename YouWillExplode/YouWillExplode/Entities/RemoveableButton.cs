@@ -43,11 +43,11 @@
 
             set
             {
-                Point halfSize = this.Size;
-                halfSize.X /= 2;
+                int halfWidth = this.Size.X;
+                halfWidth /= 2;
 
-                this.button.LeftPosition = value - halfSize;
-                this.removeButton.RightPosition = value + halfSize;
+                this.button.LeftPosition = new Point(value.X - halfWidth, value.Y);
+                this.removeButton.RightPosition = new Point(value.X + halfWidth, value.Y);
             }
         }
 
@@ -62,13 +62,15 @@
             }
         }
 
-        private Point Size =>
-                    this.button.Bounds.Size + this.spacing + this.removeButton.Bounds.Size;
-
         public int Spacing
         {
             get => this.spacing.X;
             set => this.spacing = new Point(value, 0);
+        }
+
+        private Point Size
+        {
+            get => this.button.Bounds.Size + this.spacing + this.removeButton.Bounds.Size;
         }
 
         public override void Draw(GameTime gameTime)

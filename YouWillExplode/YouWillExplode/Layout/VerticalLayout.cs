@@ -73,10 +73,7 @@
             }
         }
 
-        public void Initialize()
-        {
-            this.RecalculateBounds();
-        }
+        public void Initialize() => this.RecalculateBounds();
 
         private Point GetFixedPosition()
         {
@@ -102,7 +99,7 @@
             int aggregateheight = 0;
             for (int i = 0; i < this.Items.Count; ++i)
             {
-                var bounds = this.Items[i].Bounds;
+                Rectangle bounds = this.Items[i].Bounds;
                 if (bounds.Width > greatestWidth)
                 {
                     greatestWidth = bounds.Width;
@@ -118,10 +115,7 @@
             return new Point(greatestWidth, aggregateheight);
         }
 
-        private void OnItemsChanged()
-        {
-            this.RecalculateBounds();
-        }
+        private void OnItemsChanged() => this.RecalculateBounds();
 
         private void OnViewportChanged(Viewport viewport)
         {
@@ -173,7 +167,7 @@
                 case Alignment.Left:
                     for (int i = 0; i < this.Items.Count; i++)
                     {
-                        var item = this.Items[i].Bounds;
+                        Rectangle item = this.Items[i].Bounds;
                         this.Items[i].LeftPosition = new Point(this.bounds.X, aggregateY + (item.Height / 2));
                         aggregateY += item.Height + this.Spacing;
                     }
@@ -183,7 +177,7 @@
                 case Alignment.Middle:
                     for (int i = 0; i < this.Items.Count; i++)
                     {
-                        var item = this.Items[i].Bounds;
+                        Rectangle item = this.Items[i].Bounds;
                         this.Items[i].MiddlePosition = new Point(this.bounds.Center.X, aggregateY + (item.Height / 2));
                         aggregateY += item.Height + this.Spacing;
                     }
@@ -193,7 +187,7 @@
                 case Alignment.Right:
                     for (int i = 0; i < this.Items.Count; i++)
                     {
-                        var item = this.Items[i].Bounds;
+                        Rectangle item = this.Items[i].Bounds;
                         this.Items[i].RightPosition = new Point(this.bounds.X + this.bounds.Width, aggregateY + (item.Height / 2));
                         aggregateY += item.Height + this.Spacing;
                     }

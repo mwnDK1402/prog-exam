@@ -1,12 +1,15 @@
 ﻿namespace YouWillExplode
 {
+    using System.Collections.Generic;
+    using Layout;
     using Microsoft.Xna.Framework;
     using Microsoft.Xna.Framework.Graphics;
 
     internal sealed class SettingsMenuScene : Scene
     {
         private Button backButton;
-        private RemoveableButton removeableButton;
+        private List<RemoveableButton> list;
+        private VerticalLayout removeableButtonLayout;
 
         public SettingsMenuScene(YouWillExplode game) : base(game)
         {
@@ -15,7 +18,10 @@
         public override void Draw(GameTime gameTime)
         {
             this.backButton.Draw(gameTime);
-            this.removeableButton.Draw(gameTime);
+            foreach (RemoveableButton button in this.list)
+            {
+                button.Draw(gameTime);
+            }
         }
 
         public override void Load()
@@ -36,17 +42,20 @@
 
             this.backButton.Initialize(this.Game.SpriteBatch);
 
-            this.removeableButton = new RemoveableButton(
-                new Button(
-                    new Rectangle(8, 8, 92, 32),
-                    "Test",
-                    () => { },
-                    resources,
-                    this.Game.InputManager),
-                resources,
-                this.Game.InputManager);
+            this.list = new List<RemoveableButton>();
 
-            this.removeableButton.Initialize(this.Game.SpriteBatch);
+            this.removeableButtonLayout = new VerticalLayout(this.Game.ScreenManager);
+
+            for (int i = 0; i < 5; ++i)
+            {
+                RemoveableButton button = this.GetNewButton(resources);
+                this.list.Add(button);
+                this.removeableButtonLayout.Items.Add(button);
+            }
+
+            this.removeableButtonLayout.Initialize();
+
+            this.removeableButtonLayout.MiddlePosition = this.Game.ScreenManager.Viewport.Bounds.Center;
         }
 
         public override void Unload()
@@ -56,7 +65,27 @@
         public override void Update(GameTime gameTime)
         {
             this.backButton.Update(gameTime);
-            this.removeableButton.Update(gameTime);
+            foreach (RemoveableButton button in this.list)
+            {
+                button.Update(gameTime);
+            }
+        }
+
+        private RemoveableButton GetNewButton(Button.Resources resources)
+        {
+            var newButton = new RemoveableButton(
+                            new Button(
+                                new Rectangle(8, 8, 92, 32),
+                                "Test",
+                                () => { },
+                                resources,
+                                this.Game.InputManager),
+                            resources,
+                            this.Game.InputManager);
+
+            newButton.Initialize(this.Game.SpriteBatch);
+
+            return newButton;
         }
     }
 }
