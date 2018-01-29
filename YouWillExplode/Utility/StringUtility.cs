@@ -1,9 +1,9 @@
-﻿using System.Linq;
-using System.Text;
-
-namespace XMLDatabasePlugin
+﻿namespace Utility
 {
-    internal static class StringUtility
+    using System.Linq;
+    using System.Text;
+
+    public static class StringUtility
     {
         public static string GetIncremented(this string str)
         {

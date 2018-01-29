@@ -1,4 +1,4 @@
-﻿namespace XMLDatabasePlugin
+﻿namespace Utility
 {
     using System.Collections.Generic;
     using System.IO;
@@ -7,6 +7,7 @@
     using System.Xml;
     using System.Xml.Serialization;
     using DatabaseContract;
+    using Utility;
 
     public sealed class ProfileDatabase : IProfileDatabase
     {
@@ -29,7 +30,7 @@
             };
         }
 
-        public IList<Profile> Load()
+        public ICollection<Profile> Load()
         {
             List<Profile> profiles = new List<Profile>();
             string[] files = PathUtility.GetFilesRelative("Profiles", "*.profile");
@@ -50,7 +51,7 @@
             return profiles;
         }
 
-        public void Save(IList<Profile> profiles)
+        public void Save(ICollection<Profile> profiles)
         {
             // Handle duplicate names
             IEnumerable<IGrouping<string, Profile>> profilesByNameGroups = profiles.GroupBy(p => p.Name);

@@ -1,16 +1,11 @@
-﻿namespace XMLDatabasePlugin
+﻿namespace Utility
 {
     using System.Diagnostics;
     using System.IO;
     using System.Text;
 
-    internal class PathUtility
+    public class PathUtility
     {
-        public static string GetProcessDirectory()
-        {
-            return Path.GetDirectoryName(Process.GetCurrentProcess().MainModule.FileName) + "\\";
-        }
-
         public static string[] GetFilesRelative(string directory, string filter)
         {
             StringBuilder folder = new StringBuilder(GetProcessDirectory());
@@ -24,6 +19,11 @@
             {
                 return new string[0];
             }
+        }
+
+        public static string GetProcessDirectory()
+        {
+            return Path.GetDirectoryName(Process.GetCurrentProcess().MainModule.FileName) + "\\";
         }
     }
 }

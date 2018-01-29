@@ -1,8 +1,12 @@
 ﻿namespace YouWillExplode
 {
+    using System.Linq;
+    using DatabaseContract;
+    using global::Utility;
     using Microsoft.Xna.Framework;
     using Microsoft.Xna.Framework.Graphics;
     using Microsoft.Xna.Framework.Input;
+    using SimplePlugin;
     using Utility;
 
     /// <summary>
@@ -19,6 +23,8 @@
         }
 
         public InputManager InputManager { get; private set; }
+
+        public IProfileDatabase ProfileDatabase { get; private set; }
 
         public SceneManager SceneManager { get; private set; }
 
@@ -55,6 +61,8 @@
             this.InputManager = new InputManager();
             this.ScreenManager = new ScreenManager(this);
             this.IsMouseVisible = true;
+
+            this.ProfileDatabase = GenericPluginLoader<IProfileDatabase>.LoadPlugins(PathUtility.GetProcessDirectory() + "Plugins").Single();
 
             base.Initialize();
         }
