@@ -1,4 +1,4 @@
-﻿namespace YouWillExplode.Utility
+﻿namespace YouWillExplode
 {
     using Microsoft.Xna.Framework;
 

@@ -1,5 +1,7 @@
 ﻿namespace YouWillExplode
 {
+    using System.Collections.Generic;
+    using DatabaseContract;
     using Layout;
     using Microsoft.Xna.Framework;
     using Microsoft.Xna.Framework.Graphics;
@@ -7,6 +9,7 @@
     internal sealed class SettingsMenuScene : Scene
     {
         private Button.Resources buttonResources;
+        private List<Profile> profiles;
         private VerticalLayout removeableButtonLayout;
 
         public SettingsMenuScene(YouWillExplode game) : base(game)
@@ -33,10 +36,12 @@
             var createButtonButton = new Button(
                 new Rectangle(),
                 "+",
-                this.AddNewButton,
+                () => this.AddNewButton("New Profile"),
                 this.buttonResources);
 
             this.Manage(createButtonButton);
+
+            this.profiles = new List<Profile>(this.Game.ProfileManager.GetProfiles());
 
             // Create layout
             this.removeableButtonLayout = new VerticalLayout(this.Game.ScreenManager)
@@ -49,29 +54,29 @@
             // Populate layout with buttons
             this.removeableButtonLayout.Items.Add(createButtonButton);
 
-            for (int i = 0; i < 5; ++i)
+            foreach (Profile profile in this.profiles)
             {
-                this.AddNewButton();
+                this.AddNewButton(profile.Name);
             }
 
             // Set layout position
             this.removeableButtonLayout.MiddlePosition = this.Game.ScreenManager.Viewport.Bounds.Center;
         }
 
-        private void AddNewButton()
+        private void AddNewButton(string text)
         {
-            RemoveableButton button = this.GetNewButton();
+            RemoveableButton button = this.GetNewButton(text);
             this.removeableButtonLayout.Items.Add(button);
             this.Manage(button);
         }
 
-        private RemoveableButton GetNewButton()
+        private RemoveableButton GetNewButton(string text)
         {
             var newButton =
                 new RemoveableButton(
                     new Button(
                         new Vector2(92, 32),
-                        "Test",
+                        text,
                         () => { },
                         this.buttonResources),
                     this.buttonResources)

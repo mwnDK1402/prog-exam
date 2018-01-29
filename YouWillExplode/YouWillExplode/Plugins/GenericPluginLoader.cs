@@ -74,7 +74,7 @@ namespace SimplePlugin
                 return plugins;
             }
 
-            return null;
+            return new T[0];
         }
     }
 }

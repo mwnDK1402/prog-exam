@@ -1,4 +1,4 @@
-﻿namespace YouWillExplode.Utility
+﻿namespace YouWillExplode
 {
     using System;
     using Microsoft.Xna.Framework;
@@ -8,10 +8,10 @@
     {
         private GraphicsDevice graphicsDevice;
 
-        public ScreenManager(YouWillExplode game)
+        public ScreenManager(GraphicsDevice graphicsDevice)
         {
-            this.graphicsDevice = game.GraphicsDevice;
-            this.Viewport = this.graphicsDevice.Viewport;
+            this.graphicsDevice = graphicsDevice;
+            this.Viewport = graphicsDevice.Viewport;
         }
 
         public event Action<Viewport> ViewportChanged;
@@ -30,7 +30,7 @@
 
         public void Update(GameTime gameTime)
         {
-            var newViewport = this.graphicsDevice.Viewport;
+            Viewport newViewport = this.graphicsDevice.Viewport;
             if (this.Viewport.Equals(newViewport))
             {
                 this.Viewport = newViewport;

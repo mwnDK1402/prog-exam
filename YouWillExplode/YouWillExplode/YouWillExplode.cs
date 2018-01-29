@@ -1,13 +1,12 @@
 ﻿namespace YouWillExplode
 {
+    using System;
     using System.Linq;
     using DatabaseContract;
-    using global::Utility;
     using Microsoft.Xna.Framework;
     using Microsoft.Xna.Framework.Graphics;
     using Microsoft.Xna.Framework.Input;
     using SimplePlugin;
-    using Utility;
 
     /// <summary>
     /// This is the main type for your game.
@@ -15,6 +14,7 @@
     internal sealed class YouWillExplode : Game
     {
         private GraphicsDeviceManager graphics;
+        private IProfileDatabase profileDatabase;
 
         public YouWillExplode()
         {
@@ -24,7 +24,9 @@
 
         public InputManager InputManager { get; private set; }
 
-        public IProfileDatabase ProfileDatabase { get; private set; }
+        public ProfileManager ProfileManager { get; private set; }
+
+        public PreferencesManager PreferencesManager { get; private set; }
 
         public SceneManager SceneManager { get; private set; }
 
@@ -59,10 +61,23 @@
         {
             //// TODO: Add your initialization logic here
             this.InputManager = new InputManager();
-            this.ScreenManager = new ScreenManager(this);
+            this.ScreenManager = new ScreenManager(this.GraphicsDevice);
             this.IsMouseVisible = true;
 
-            this.ProfileDatabase = GenericPluginLoader<IProfileDatabase>.LoadPlugins(PathUtility.GetProcessDirectory() + "Plugins").Single();
+            try
+            {
+                this.profileDatabase =
+                    GenericPluginLoader<IProfileDatabase>
+                        .LoadPlugins(global::Utility.PathUtility.GetProcessDirectory() + "Plugins")
+                        .Single();
+            }
+            catch (InvalidOperationException e)
+            {
+                throw new Exception("Plugin missing: IProfileDatabase", e);
+            }
+
+            this.PreferencesManager = new PreferencesManager();
+            this.ProfileManager = new ProfileManager(this.profileDatabase, this.PreferencesManager);
 
             base.Initialize();
         }
@@ -81,6 +96,13 @@
                 // This ambiguity is a downside of implicit dependencies through access to public properties
                 ActiveScene = new MainMenuScene(this)
             };
+        }
+
+        protected override void OnExiting(object sender, EventArgs args)
+        {
+            this.ProfileManager.Save();
+            this.PreferencesManager.Save();
+            base.OnExiting(sender, args);
         }
 
         /// <summary>

@@ -7,7 +7,6 @@
     using System.Xml;
     using System.Xml.Serialization;
     using DatabaseContract;
-    using Utility;
 
     public sealed class ProfileDatabase : IProfileDatabase
     {
@@ -32,7 +31,7 @@
 
         public ICollection<Profile> Load()
         {
-            List<Profile> profiles = new List<Profile>();
+            var profiles = new List<Profile>();
             string[] files = PathUtility.GetFilesRelative("Profiles", "*.profile");
 
             if (files.Length == 0)
@@ -40,9 +39,9 @@
                 return profiles;
             }
 
-            foreach (var file in files)
+            foreach (string file in files)
             {
-                using (XmlReader reader = XmlReader.Create(file, this.readerSettings))
+                using (var reader = XmlReader.Create(file, this.readerSettings))
                 {
                     profiles.Add((Profile)this.serializer.Deserialize(reader));
                 }
@@ -56,9 +55,9 @@
             // Handle duplicate names
             IEnumerable<IGrouping<string, Profile>> profilesByNameGroups = profiles.GroupBy(p => p.Name);
 
-            List<Profile> newProfiles = new List<Profile>(profiles.Count);
+            var newProfiles = new List<Profile>(profiles.Count);
 
-            foreach (var grouping in profilesByNameGroups)
+            foreach (IGrouping<string, Profile> grouping in profilesByNameGroups)
             {
                 if (grouping.Count() <= 1)
                 {
@@ -67,27 +66,28 @@
                 }
 
                 string name = grouping.Key;
-                foreach (var profile in grouping)
+                foreach (Profile profile in grouping)
                 {
                     name = name.GetIncremented();
-                    var newProfile = profile;
+                    Profile newProfile = profile;
                     newProfile.Name = name;
                     newProfiles.Add(newProfile);
                 }
             }
 
-            StringBuilder pathBuilder = new StringBuilder();
+            var pathBuilder = new StringBuilder();
 
-            foreach (var profile in newProfiles)
+            foreach (Profile profile in newProfiles)
             {
                 pathBuilder.Append(PathUtility.GetProcessDirectory());
                 pathBuilder.Append("Profiles\\");
+                Directory.CreateDirectory(pathBuilder.ToString());
                 pathBuilder.Append(profile.Name);
                 pathBuilder.Append(".profile");
 
-                using (StreamWriter sw = new StreamWriter(pathBuilder.ToString()))
+                using (var sw = new StreamWriter(pathBuilder.ToString()))
                 {
-                    XmlWriter tw = XmlWriter.Create(sw, this.writerSettings);
+                    var tw = XmlWriter.Create(sw, this.writerSettings);
                     this.serializer.Serialize(tw, profile);
                 }
 

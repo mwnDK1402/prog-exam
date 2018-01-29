@@ -1,10 +1,10 @@
-﻿namespace YouWillExplode.Utility
+﻿namespace YouWillExplode
 {
     using System;
     using Microsoft.Xna.Framework;
     using Microsoft.Xna.Framework.Input;
 
-    internal sealed class InputManager
+    internal sealed class InputManager : IUpdateable
     {
         private KeyboardState previousKeyboardState;
         private MouseState previousMouseState;
@@ -15,7 +15,7 @@
 
         public void Update(GameTime gameTime)
         {
-            var currentMouseState = Mouse.GetState();
+            MouseState currentMouseState = Mouse.GetState();
 
             this.TryRaiseMouseStateEvent(
                 this.previousMouseState.LeftButton,
