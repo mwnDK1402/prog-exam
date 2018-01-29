@@ -51,6 +51,8 @@
     <Compile Include="Layout\ILayoutElement.cs" />
     <Compile Include="Layout\Alignment.cs" />
     <Compile Include="Layout\VerticalLayout.cs" />
+    <Compile Include="Plugins\GenericPluginLoader.cs" />
+    <Compile Include="Profiles\Profile.cs" />
     <Compile Include="Scenes\SettingsMenuScene.cs" />
     <Compile Include="Utility\RectangleUtility.cs" />
     <Compile Include="Managers\SceneManager.cs" />

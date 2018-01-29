@@ -23,7 +23,7 @@
                 throw new System.ArgumentNullException(nameof(sceneObject));
             }
 
-            this.Unregister(sceneObject);
+            this.UnregisterHooks(sceneObject);
 
             sceneObject.Terminate();
         }
@@ -45,7 +45,7 @@
                 throw new System.ArgumentNullException(nameof(sceneObject));
             }
 
-            this.Register(sceneObject);
+            this.RegisterHooks(sceneObject);
 
             sceneObject.Initialize(this);
         }
@@ -88,7 +88,7 @@
         {
         }
 
-        private void Register(IManageable sceneObject)
+        private void RegisterHooks(IManageable sceneObject)
         {
             this.destructibles.Add(sceneObject);
 
@@ -103,7 +103,7 @@
             }
         }
 
-        private void Unregister(IManageable sceneObject)
+        private void UnregisterHooks(IManageable sceneObject)
         {
             this.destructibles.Remove(sceneObject);
 

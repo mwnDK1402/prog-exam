@@ -6,8 +6,8 @@
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProjectGuid>{AF51931C-E452-48E6-9744-73969540B670}</ProjectGuid>
     <OutputType>Exe</OutputType>
-    <RootNamespace>YouWillDevelop</RootNamespace>
-    <AssemblyName>YouWillDevelop</AssemblyName>
+    <RootNamespace>XMLDatabasePlugin</RootNamespace>
+    <AssemblyName>XMLDatabasePlugin</AssemblyName>
     <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
@@ -42,11 +42,20 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="PathUtility.cs" />
+    <Compile Include="ProfileDatabase.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="StringUtility.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\PluginContracts\DatabaseContract.csproj">
+      <Project>{43c879d1-31ae-424f-91d1-92cf286d5497}</Project>
+      <Name>DatabaseContract</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
