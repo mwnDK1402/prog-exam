@@ -27,6 +27,9 @@
         public void Draw(GameTime gameTime) =>
             this.activeScene.Draw(gameTime);
 
+        public void ForceUnload() =>
+            this.activeScene?.Unload();
+
         public void Update(GameTime gameTime) =>
             this.activeScene.Update(gameTime);
     }

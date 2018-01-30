@@ -9,7 +9,7 @@
     internal sealed class SettingsMenuScene : Scene
     {
         private Button.Resources buttonResources;
-        private List<Profile> profiles;
+        private Dictionary<RemoveableButton, Profile> profileByButton;
         private VerticalLayout removeableButtonLayout;
 
         public SettingsMenuScene(YouWillExplode game) : base(game)
@@ -36,12 +36,12 @@
             var createButtonButton = new Button(
                 new Rectangle(),
                 "+",
-                () => this.AddNewButton("New Profile"),
+                () => this.AddProfile(Profile.New),
                 this.buttonResources);
 
             this.Manage(createButtonButton);
 
-            this.profiles = new List<Profile>(this.Game.ProfileManager.GetProfiles());
+            var profiles = this.Game.ProfileManager.Profiles;
 
             // Create layout
             this.removeableButtonLayout = new VerticalLayout(this.Game.ScreenManager)
@@ -54,20 +54,27 @@
             // Populate layout with buttons
             this.removeableButtonLayout.Items.Add(createButtonButton);
 
-            foreach (Profile profile in this.profiles)
+            this.profileByButton = new Dictionary<RemoveableButton, Profile>();
+            foreach (Profile profile in profiles)
             {
-                this.AddNewButton(profile.Name);
+                this.AddProfile(profile);
             }
 
             // Set layout position
-            this.removeableButtonLayout.MiddlePosition = this.Game.ScreenManager.Viewport.Bounds.Center;
+            this.removeableButtonLayout.LeftPosition = new Point(24, this.Game.ScreenManager.Viewport.Bounds.Center.Y);
         }
 
-        private void AddNewButton(string text)
+        protected override void OnUnload()
         {
-            RemoveableButton button = this.GetNewButton(text);
+        }
+
+        private void AddProfile(Profile profile)
+        {
+            RemoveableButton button = this.GetNewButton(profile.Name);
             this.removeableButtonLayout.Items.Add(button);
             this.Manage(button);
+
+            this.profileByButton.Add(button, profile);
         }
 
         private RemoveableButton GetNewButton(string text)
@@ -77,7 +84,7 @@
                     new Button(
                         new Vector2(92, 32),
                         text,
-                        () => { },
+                        () => { /* Edit profile */ },
                         this.buttonResources),
                     this.buttonResources)
                 {

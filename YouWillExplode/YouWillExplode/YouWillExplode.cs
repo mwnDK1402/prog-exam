@@ -24,9 +24,9 @@
 
         public InputManager InputManager { get; private set; }
 
-        public ProfileManager ProfileManager { get; private set; }
-
         public PreferencesManager PreferencesManager { get; private set; }
+
+        public ProfileManager ProfileManager { get; private set; }
 
         public SceneManager SceneManager { get; private set; }
 
@@ -102,6 +102,7 @@
         {
             this.ProfileManager.Save();
             this.PreferencesManager.Save();
+            this.SceneManager.ForceUnload();
             base.OnExiting(sender, args);
         }
 

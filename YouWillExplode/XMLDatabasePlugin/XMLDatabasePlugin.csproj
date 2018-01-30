@@ -62,4 +62,8 @@
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <PropertyGroup>
+    <PostBuildEvent>cd $(ProjectDir)
+copy /y bin\debug\XMLDatabasePlugin.dll C:\Users\math739b\source\repos\prog-exam\YouWillExplode\YouWillExplode\bin\Windows\x86\Debug\Plugins\</PostBuildEvent>
+  </PropertyGroup>
 </Project>
