@@ -66,10 +66,25 @@
                 }
 
                 string name = grouping.Key;
-                foreach (Profile profile in grouping)
+                var enumerator = grouping.GetEnumerator();
+
+                // We skip the first profile if the name ends with a number
+                enumerator.MoveNext();
+                if (enumerator.Current.Name.EndsWithNumber())
+                {
+                    Profile newProfile = enumerator.Current;
+                    newProfile.Name = name;
+                    newProfiles.Add(newProfile);
+                }
+                else
+                {
+                    enumerator.Reset();
+                }
+
+                while (enumerator.MoveNext())
                 {
                     name = name.GetIncremented();
-                    Profile newProfile = profile;
+                    Profile newProfile = enumerator.Current;
                     newProfile.Name = name;
                     newProfiles.Add(newProfile);
                 }
