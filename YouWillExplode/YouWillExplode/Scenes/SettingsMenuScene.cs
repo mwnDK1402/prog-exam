@@ -1,5 +1,6 @@
 ﻿namespace YouWillExplode
 {
+    using System;
     using System.Collections.Generic;
     using DatabaseContract;
     using Layout;
@@ -9,7 +10,8 @@
     internal sealed class SettingsMenuScene : Scene
     {
         private Button.Resources buttonResources;
-        private Dictionary<RemoveableButton, Profile> profileByButton;
+        private ProfileEditor editor;
+        private List<ProfileButton> profiles;
         private VerticalLayout removeableButtonLayout;
 
         public SettingsMenuScene(YouWillExplode game) : base(game)
@@ -54,7 +56,7 @@
             // Populate layout with buttons
             this.removeableButtonLayout.Items.Add(createButtonButton);
 
-            this.profileByButton = new Dictionary<RemoveableButton, Profile>();
+            this.profiles = new List<ProfileButton>();
             foreach (Profile profile in profiles)
             {
                 this.AddProfile(profile);
@@ -70,28 +72,52 @@
 
         private void AddProfile(Profile profile)
         {
-            RemoveableButton button = this.GetNewButton(profile.Name);
-            this.removeableButtonLayout.Items.Add(button);
+            var button = new ProfileButton(profile, this.editor, this, this.buttonResources);
+            this.profiles.Add(button);
+            this.removeableButtonLayout.Items.Add(button.Button);
             this.Manage(button);
-
-            this.profileByButton.Add(button, profile);
         }
 
-        private RemoveableButton GetNewButton(string text)
+        /// <summary>
+        /// Toggle editing a profile.
+        /// If the profile is already being edited, and this method is called,
+        /// the profile editor will be closed.
+        /// </summary>
+        /// <param name="newButton">The button that was pressed.</param>
+        private void EditProfile(RemoveableButton newButton)
         {
-            var newButton =
-                new RemoveableButton(
-                    new Button(
-                        new Vector2(92, 32),
-                        text,
-                        () => { /* Edit profile */ },
-                        this.buttonResources),
-                    this.buttonResources)
-                {
-                    Spacing = 4
-                };
+            throw new NotImplementedException();
+        }
 
-            return newButton;
+        private void RemoveProfile(Profile profile)
+        {
+        }
+
+        private class ProfileButton : Entity
+        {
+            private Profile profile;
+
+            public ProfileButton(Profile profile, ProfileEditor editor, SettingsMenuScene scene, Button.Resources resources)
+            {
+                this.Button =
+                    new RemoveableButton(
+                        new Button(
+                            new Vector2(92, 32),
+                            profile.Name,
+                            () => editor.EditProfile(this.profile),
+                            resources),
+                        () => scene.Destroy(this),
+                        resources)
+                    {
+                        Spacing = 4
+                    };
+
+                scene.Manage(this.Button);
+
+                this.profile = profile;
+            }
+
+            public RemoveableButton Button { get; private set; }
         }
     }
 }

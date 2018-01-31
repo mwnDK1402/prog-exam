@@ -1,5 +1,6 @@
 ﻿namespace YouWillExplode
 {
+    using System;
     using Microsoft.Xna.Framework;
 
     internal sealed class RemoveableButton : Entity, ILayoutElement
@@ -9,8 +10,8 @@
         private Point spacing;
 
         public RemoveableButton(Button button, Button.Resources resources)
+            : this(button)
         {
-            this.button = button;
             this.removeButton = new Button(
                 new Rectangle(),
                 "X",
@@ -18,6 +19,27 @@
                 resources);
 
             this.UpdateRemoveButtonPosition();
+        }
+
+        public RemoveableButton(Button button, Action removeAction, Button.Resources resources)
+            : this(button)
+        {
+            this.removeButton = new Button(
+                new Rectangle(),
+                "X",
+                () =>
+                {
+                    removeAction();
+                    this.scene.Destroy(this);
+                },
+                resources);
+
+            this.UpdateRemoveButtonPosition();
+        }
+
+        private RemoveableButton(Button button)
+        {
+            this.button = button;
         }
 
         public Rectangle Bounds => this.button.Bounds;
