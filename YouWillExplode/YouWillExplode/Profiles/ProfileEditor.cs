@@ -12,7 +12,7 @@
         {
         }
 
-        internal void EditProfile(Profile profile)
+        public void EditProfile(Profile profile)
         {
             throw new NotImplementedException();
         }

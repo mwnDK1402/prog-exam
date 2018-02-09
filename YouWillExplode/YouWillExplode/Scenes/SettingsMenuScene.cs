@@ -43,7 +43,7 @@
 
             this.Manage(createButtonButton);
 
-            var profiles = this.Game.ProfileManager.Profiles;
+            List<Profile> profiles = this.Game.ProfileManager.Profiles;
 
             // Create layout
             this.removeableButtonLayout = new VerticalLayout(this.Game.ScreenManager)
@@ -64,6 +64,10 @@
 
             // Set layout position
             this.removeableButtonLayout.LeftPosition = new Point(24, this.Game.ScreenManager.Viewport.Bounds.Center.Y);
+
+            // Profile editor
+            this.editor = new ProfileEditor();
+            this.Manage(this.editor);
         }
 
         protected override void OnUnload()
@@ -76,17 +80,6 @@
             this.profiles.Add(button);
             this.removeableButtonLayout.Items.Add(button.Button);
             this.Manage(button);
-        }
-
-        /// <summary>
-        /// Toggle editing a profile.
-        /// If the profile is already being edited, and this method is called,
-        /// the profile editor will be closed.
-        /// </summary>
-        /// <param name="newButton">The button that was pressed.</param>
-        private void EditProfile(RemoveableButton newButton)
-        {
-            throw new NotImplementedException();
         }
 
         private void RemoveProfile(Profile profile)

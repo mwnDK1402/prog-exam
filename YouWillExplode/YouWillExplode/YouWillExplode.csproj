@@ -56,7 +56,7 @@
     <Compile Include="Managers\ProfileManager.cs" />
     <Compile Include="Plugins\GenericPluginLoader.cs" />
     <Compile Include="Profiles\Profile.cs" />
-    <Compile Include="Scenes\ProfileEditor.cs" />
+    <Compile Include="Profiles\ProfileEditor.cs" />
     <Compile Include="Scenes\SettingsMenuScene.cs" />
     <Compile Include="Utility\RectangleUtility.cs" />
     <Compile Include="Managers\SceneManager.cs" />
